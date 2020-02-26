@@ -21,4 +21,5 @@ you`ll find all routes documented
 
 - code scalability updates
 - integration with wallets
-- auto documentation of contract's entrypoints
+- auto documentation/detection of contract's entrypoints
+- cryptographed requests/responses 
