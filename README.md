@@ -19,7 +19,8 @@ you'll find all routes documented
 
 # next updates:
 
-- code scalability updates
-- integration with wallets
+
+- integration with ledgers
+- FA1.2
 - auto documentation/detection of contract's entrypoints
 - cryptographed requests/responses 

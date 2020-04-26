@@ -3,19 +3,20 @@ from pytezos import Contract
 from pytezos import pytezos
 from pytezos.operation.result import OperationResult
 
-pytezos = pytezos
-OperationResult = OperationResult
-
 from flask import Flask
-from flask_restplus import fields, Resource, Api
+from flask_restx import fields, Resource, Api, Namespace
 
 import requests
 import urllib
 
-petition_api = Blueprint('petition_api', __name__)
-api = Api(petition_api)
+# https://flask-restplus.readthedocs.io/en/stable/scaling.html
 
-@api.route('/publish_petition')
+pytezos = pytezos
+OperationResult = OperationResult
+
+api = Namespace('petition', description='publish, originate details, sign')
+
+@api.route('/publish')
 class Petition(Resource):
     def get(self):
         contract = Contract.from_file('./smart_contracts/petition.tz')    
@@ -23,7 +24,7 @@ class Petition(Resource):
         originated_kt = OperationResult.originated_contracts(op)
         return { 'kt' : originated_kt[0] }
 
-@api.route('/origin_petition', endpoint='origin_petition')
+@api.route('/original_details')
 @api.doc(params={'kt': 'An KT Address', 'ocasion' : 'Details on Ocasion',
 'proposal' : 'Details of Proposal', 'description' : 'Description', 'time_out' : 'YYYY-MM-DD'})
 class OriginCrowd(Resource):
@@ -38,7 +39,7 @@ class OriginCrowd(Resource):
                         description = urllib.parse.unquote(request.args.get('description'))).inject()
         return { 'status' : 'applied' }
 
-@api.route('/sign_petition', endpoint='sign_petition')
+@api.route('/sign')
 @api.doc(params={'kt': 'An KT Address', 'name' : 'Name of the party', 'id' : 'ID of the party'})
 class SignPetition(Resource):
 
