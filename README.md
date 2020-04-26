@@ -15,10 +15,11 @@ docker container rm --force sf
 # routes
 
 access: https://localhost:5000/
-you`ll find all routes documented
+you'll find all routes documented
 
 # next updates:
 
-- code scalability updates
-- integration with wallets
-- auto documentation of contract's entrypoints
+- integration with ledgers
+- FA1.2
+- auto documentation/detection of contract's entrypoints
+- cryptographed requests/responses 

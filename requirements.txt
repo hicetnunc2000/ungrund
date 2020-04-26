@@ -1,5 +1,5 @@
 flask
-flask_restful
+flask_restx
 feedparser
 conseil
 pytezos[crypto]
