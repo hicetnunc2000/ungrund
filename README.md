@@ -23,4 +23,8 @@ you'll find all routes documented
 - integration with ledgers
 - FA1.2
 - auto documentation/detection of contract's entrypoints
-- cryptographed requests/responses 
+- cryptographed requests/responses
+
+# donate
+0xa0290385540aB98222d00547cb59a9E72A788Bf3
+tz1L6qEvhRFufA5KES6QJ48pvgvTrLcGUoLb 
