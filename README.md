@@ -26,5 +26,5 @@ you'll find all routes documented
 - cryptographed requests/responses
 
 # donate
-0xa0290385540aB98222d00547cb59a9E72A788Bf3
-tz1L6qEvhRFufA5KES6QJ48pvgvTrLcGUoLb 
+eth: 0xa0290385540aB98222d00547cb59a9E72A788Bf3
+tz: tz1L6qEvhRFufA5KES6QJ48pvgvTrLcGUoLb 
