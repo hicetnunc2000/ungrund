@@ -17,7 +17,7 @@ docker container rm --force sf
 access: https://localhost:5000/
 you'll find all routes documented
 
-# next updates:
+# next updates
 
 
 - integration with ledgers
