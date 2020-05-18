@@ -1,16 +1,15 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Feb 21 23:27:59 2020
+from flask import Blueprint, request
+from flask_restx import fields, Resource, Api, Namespace
 
-@author: crzy
-"""
-
-from flask import Blueprint
 from pytezos import Contract
 from pytezos import pytezos
 from pytezos.operation.result import OperationResult
+import requests
+import urllib
 
+pytezos = pytezos
+
+api = Namespace('evote', description='publish, originate details, sign')
 pytezos = pytezos
 OperationResult = OperationResult
 

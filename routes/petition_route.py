@@ -1,15 +1,14 @@
 from flask import Blueprint, request
+from flask import Flask
+
+from flask_restx import fields, Resource, Api, Namespace
+
 from pytezos import Contract
 from pytezos import pytezos
 from pytezos.operation.result import OperationResult
 
-from flask import Flask
-from flask_restx import fields, Resource, Api, Namespace
-
 import requests
 import urllib
-
-# https://flask-restplus.readthedocs.io/en/stable/scaling.html
 
 pytezos = pytezos
 OperationResult = OperationResult
