@@ -5,7 +5,8 @@ RUN pip install --upgrade pip
 RUN apt-get update \
 && apt-get install -y libsodium-dev \
 libsecp256k1-dev \
-libgmp-dev
+libgmp-dev \
+pkg-config
 
 COPY . /app
 WORKDIR /app
