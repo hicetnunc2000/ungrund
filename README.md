@@ -1,6 +1,6 @@
 # ungrund
 
-descentralized api
+decentralized api
 
 ```
 docker image build -t storage-flask:1.0 .
@@ -26,5 +26,7 @@ you'll find all routes documented
 - cryptographed requests/responses
 
 # donate
+```
 eth: 0xa0290385540aB98222d00547cb59a9E72A788Bf3
-tz: tz1L6qEvhRFufA5KES6QJ48pvgvTrLcGUoLb 
+tz: tz1L6qEvhRFufA5KES6QJ48pvgvTrLcGUoLb
+```
