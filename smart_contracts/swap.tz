@@ -1,0 +1,203 @@
+parameter (or (unit %claim) (or (unit %fill) (unit %withdraw)));
+
+storage (pair (pair (address %admin) (pair (mutez %amount) (address %bet))) (pair (pair (address %fa12) (bool %immutable)) (pair (nat %tk_amount) (mutez %tz_amount))));
+
+code
+  {
+    DUP;
+    CDR;
+    SWAP;
+    CAR;
+    IF_LEFT
+      {
+        SWAP;
+        DUP;
+        DUG 2;
+        CAAR;
+        SENDER;
+        COMPARE;
+        EQ;
+        IF
+          {
+          }
+          {
+            PUSH string "WrongCondition: sp.sender == self.data.admin";
+            FAILWITH;
+          };
+        NIL operation;
+        DIG 2;
+        DUP;
+        DUG 3;
+        CDAAR;
+        CONTRACT %transfer ( pair ( address %from ) ( pair ( address %to ) ( nat %value ) ) );
+        IF_SOME
+          {
+          }
+          {
+            PUSH unit Unit;
+            FAILWITH;
+          };
+        PUSH mutez 0;
+        DIG 4;
+        DUP;
+        DUG 5;
+        CDDAR;
+        DIG 5;
+        DUP;
+        DUG 6;
+        CADDR;
+        PAIR %to %value;
+        SELF;
+        DIG 5;
+        DROP;
+        ADDRESS;
+        PAIR %from;
+        TRANSFER_TOKENS;
+        CONS;
+      }
+      {
+        IF_LEFT
+          {
+            SWAP;
+            DUP;
+            DUG 2;
+            CDDDR;
+            AMOUNT;
+            COMPARE;
+            GE;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: sp.amount >= self.data.tz_amount";
+                FAILWITH;
+              };
+            PUSH bool False;
+            DIG 2;
+            DUP;
+            DUG 3;
+            CDADR;
+            COMPARE;
+            EQ;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: self.data.immutable == False";
+                FAILWITH;
+              };
+            SWAP;
+            DUP;
+            CAR;
+            SWAP;
+            CDR;
+            DUP;
+            CDR;
+            SWAP;
+            CAAR;
+            PUSH bool True;
+            SWAP;
+            PAIR;
+            PAIR;
+            SWAP;
+            PAIR;
+            SWAP;
+            NIL operation;
+            DIG 2;
+            DUP;
+            DUG 3;
+            CDAAR;
+            CONTRACT %transfer ( pair ( address %from ) ( pair ( address %to ) ( nat %value ) ) );
+            IF_SOME
+              {
+              }
+              {
+                PUSH unit Unit;
+                FAILWITH;
+              };
+            PUSH mutez 0;
+            DIG 4;
+            DUP;
+            DUG 5;
+            CDDAR;
+            SELF;
+            DIG 5;
+            DROP;
+            ADDRESS;
+            PAIR %to %value;
+            DIG 4;
+            DUP;
+            DUG 5;
+            CAAR;
+            PAIR %from;
+            TRANSFER_TOKENS;
+            CONS;
+            SWAP;
+            DUP;
+            CDR;
+            SWAP;
+            CADR;
+            SENDER;
+            PAIR;
+            PAIR;
+            SWAP;
+            SWAP;
+            DUP;
+            DUG 2;
+            DUP;
+            CDR;
+            SWAP;
+            CAR;
+            DUP;
+            CAR;
+            SWAP;
+            CDDR;
+            AMOUNT;
+            DIG 5;
+            CADAR;
+            ADD;
+            PAIR;
+            SWAP;
+            PAIR;
+            PAIR;
+            SWAP;
+          }
+          {
+            SWAP;
+            DUP;
+            DUG 2;
+            CAAR;
+            SENDER;
+            COMPARE;
+            EQ;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: sp.sender == self.data.admin";
+                FAILWITH;
+              };
+            DROP;
+            DUP;
+            CAAR;
+            CONTRACT unit;
+            NIL operation;
+            SWAP;
+            IF_SOME
+              {
+              }
+              {
+                PUSH unit Unit;
+                FAILWITH;
+              };
+            DIG 2;
+            DUP;
+            DUG 3;
+            CADAR;
+            PUSH unit Unit;
+            TRANSFER_TOKENS;
+            CONS;
+          };
+      };
+    PAIR;
+  }

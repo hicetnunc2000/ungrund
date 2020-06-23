@@ -1,0 +1,24 @@
+{
+    "mnemonic": [
+      "surprise",
+      "shell",
+      "wood",
+      "ladder",
+      "parrot",
+      "dash",
+      "engage",
+      "impulse",
+      "wreck",
+      "fee",
+      "eyebrow",
+      "vivid",
+      "buddy",
+      "work",
+      "raccoon"
+    ],
+    "secret": "f522d2a669027b3374bedf281c5c066303a5567b",
+    "amount": "2753060570",
+    "pkh": "tz1aYnvQGLzyPwoiNpwgrm4b3huN3Cdj1AvM",
+    "password": "cucfXmr8Sa",
+    "email": "yllcasob.rqlboyhe@tezos.example.org"
+  }

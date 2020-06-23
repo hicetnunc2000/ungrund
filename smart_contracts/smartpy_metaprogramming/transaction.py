@@ -10,10 +10,8 @@ class Transaction(sp.Contract):
             immutability = sp.bool(False)
             )
 
-
     @sp.entry_point
     def transaction(self, params):
-        
         sp.verify(self.data.immutability == False)
         
         # Transfer transaction amount to contract's balance (forwarding)
