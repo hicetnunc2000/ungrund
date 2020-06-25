@@ -9,7 +9,7 @@ from pytezos import pytezos
 from pytezos.operation.result import OperationResult
 from ast import literal_eval
 from controllers.validate import Validate
-import redis
+#import redis
 import requests
 import urllib
 import json
