@@ -36,6 +36,7 @@ class publish_fa12(Resource):
                 # op['contents'][0]['metadata']
                 # op['hash']
 
+            #return OperationResult.originated_contracts(op)[0]
             return v.filter_response(op)
         except:
             return 500
@@ -84,8 +85,8 @@ class approve_fa12(Resource):
 @api.doc(params={
     'contract': 'fa12 KT contract address',
     'owner': 'tz address',
-    'spender': 'tz address',
-    'contract_2': 'another KT address??'
+    'spender': 'tz address'
+#    'contract_2': 'response view KT address'
 })
 class get_allowance_fa12(Resource):
     def post(self):
@@ -97,7 +98,7 @@ class get_allowance_fa12(Resource):
 
         j = {}
         j['owner'] = payload['owner']
-        j['approvals']['spender'] = ci.get_big_map(payload['owner']['approvals'][payload['spender']])
+        j['approvals']['spender'] = ci.big_map_get(payload['owner']['approvals'][payload['spender']])
         
         return j
 
@@ -105,8 +106,8 @@ class get_allowance_fa12(Resource):
 @api.route("/get_balance")
 @api.doc({
     'contract': 'fa12 KT contract address',
-    'owner': 'tz address',
-    'contract_1': 'callback KT address'
+    'owner': 'tz address'
+#    'contract_1': 'callback KT address'
 })
 # "contract_1": $contract (nat)
 class get_balance_fa12(Resource):
@@ -119,7 +120,7 @@ class get_balance_fa12(Resource):
             
             j = {}
             j['owner'] = payload['owner']
-            j['balance'] = ci.get_big_map(payload['owner'])
+            j['balance'] = ci.big_map_get(payload['owner'])['balance']
 
             return j
         except:
