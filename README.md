@@ -10,18 +10,20 @@ Docker version 19.03.9 and Docker Machine version 0.16.2
 build
 ```
 docker image build -t ungrund:1.0 .
-docker container run --publish 5000:5000 --detach --name u ungrund:1.0
+docker container run --publish 5000:5000 --detach --name ungrund ungrund:1.0
 ```
 
 delete container:
 ```
-docker container rm --force sf
+docker container rm --force ungrund
 ```
 
 # routes
 
 access: https://localhost:5000/
 you'll find routes documented
+
+you should first visit key route and configure it with your wallet credentials
 
 # next updates
 
