@@ -1,6 +1,6 @@
 # @crzypatchwork
 
-from flask import Blueprint, request
+from flask import Blueprint, request, session
 from pytezos import Contract
 from pytezos import pytezos
 from pytezos.operation.result import OperationResult
@@ -22,9 +22,12 @@ api = Namespace('fa2', description='publish and other entrypoints')
 class publish_fa2(Resource):
     def get(self):
         try:
+            payload = v.read_requests(request)
+            pytz = v.read_session(session)
+
             contract = Contract.from_file('./smart_contracts/fa2.tz')
-            op = pytezos.origination(script=contract.script(storage={ "administrator" : pytezos.key.public_key_hash(), "all_tokens" : 0, "ledger" : {}, "paused" : False, "tokens" : {}, "totalSupply" : 0  })).fill().sign().inject(_async=False, num_blocks_wait=2)
-            originated_kt = OperationResult.originated_contracts(op)
+            op = pytz.origination(script=contract.script(storage={ "administrator" : pytezos.key.public_key_hash(), "all_tokens" : 0, "ledger" : {}, "paused" : False, "tokens" : {}, "totalSupply" : 0  })).fill().sign().inject(_async=False, num_blocks_wait=2)
+
             return v.filter_response(op)
         except:
             return 500

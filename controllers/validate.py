@@ -63,7 +63,7 @@ class Validate():
 
     def read_requests(self, request):
         if (request.data.__len__() == 0):
-            return request.args.__dict__()
+            return request.args.to_dict(flat=False)
         else:
             return json.loads(request.data)
 

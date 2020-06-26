@@ -28,10 +28,8 @@ class publish_fa12(Resource):
         try:
             payload = v.read_requests(request)
             pytz = v.read_session(session)
-
             contract = Contract.from_file('./smart_contracts/fa12.tz')
-            op = pytz.origination(script=contract.script(storage={'ledger': {}, 'admin': pytz.key.public_key_hash(
-                ), 'paused': False, 'totalSupply': payload['total_supply']})).autofill().sign().inject(_async=False, num_blocks_wait=2)
+            op = pytz.origination(script=contract.script(storage={'ledger': {}, 'admin': pytz.key.public_key_hash(), 'paused': False, 'totalSupply': payload['total_supply']})).autofill().sign().inject(_async=False, num_blocks_wait=2)
 
             return v.filter_response(op)
         except:
@@ -70,9 +68,6 @@ class approve_fa12(Resource):
             pytz = v.read_session(session)
             ci = pytz.contract(payload['contract'])
             r = ci.approve({"spender" : payload['spender'], "value" : int(payload['value'])}).inject()
-
-            #ret = v.filter_response(r)
-
             return r
         except:
             return 500
@@ -156,8 +151,6 @@ class set_pause_fa12(Resource):
 
             ci = pytz.contract(payload['contract'])
             r = ci.setPause(json.loads(payload['bool'].lower())).inject()
-
-            # ret = v.filter_response(r)
             
             return r
         except:
@@ -176,8 +169,6 @@ class set_administrator_fa12(Resource):
 
             ci = pytz.contract(payload['contract'])
             r = ci.setAdministrator(payload['adm']).inject()
-
-            # ret = v.filter_response(r)
 
             return r
         except:
@@ -219,7 +210,7 @@ class mint_fa12(Resource):
 
             ci = pytz.contract(payload['contract'])
             r = ci.mint({"to" : payload['to'], "value": int(payload['amount'])}).inject()
-            #ret = v.filter_response(r)
+
             return r
         except:
             return 500
@@ -239,7 +230,6 @@ class burn_fa12(Resource):
             ci = pytz.contract(payload['contract'])
             r = ci.burn({"from" : payload['from'], "value": int(payload['amount'])}).inject()
 
-            #ret = v.filter_response(r)
             return r
         except:
             return 500
