@@ -9,6 +9,7 @@ from flask_restx import fields, Resource, Api, Namespace
 
 from controllers.validate import Validate
 
+import distutils.util
 import requests
 import urllib
 import json
@@ -48,7 +49,7 @@ class transfer_fa12(Resource):
             payload = v.read_requests(request)
             pytz = v.read_session(session)
             ci = pytz.contract(payload['contract'])
-            r = ci.transfer({'from' : payload['from'], "to" : payload['to'], "value" : payload['value']}).inject()
+            r = ci.transfer({'from' : payload['from'], "to" : payload['to'], "value" : int(payload['value'])}).inject()
 
             return r
         except:
@@ -95,7 +96,7 @@ class get_allowance_fa12(Resource):
 
 # Maintance View
 @api.route("/get_balance")
-@api.doc({
+@api.doc(params={
     'contract': 'fa12 KT contract address',
     'owner': 'tz address'
 #    'contract_1': 'callback KT address'
@@ -119,7 +120,7 @@ class get_balance_fa12(Resource):
 
 # Maintence View
 @api.route('/get_total_supply')
-@api.doc({
+@api.doc(params={
     'contract' : 'fa12 KT contract address'
 })
 class get_total_supply_fa12(Resource):
@@ -139,7 +140,7 @@ class get_total_supply_fa12(Resource):
             return 500
 
 @api.route('/set_pause')
-@api.doc({
+@api.doc(params={
     "contract" : "fa12 KT contract address",
     "bool" : "boolean True or False"
 })
@@ -150,14 +151,14 @@ class set_pause_fa12(Resource):
             pytz = v.read_session(session)
 
             ci = pytz.contract(payload['contract'])
-            r = ci.setPause(json.loads(payload['bool'].lower())).inject()
+            r = ci.setPause(bool(distutils.util.strtobool(payload['bool']))).inject()
             
             return r
         except:
             return 500
 
 @api.route('/set_administrator')
-@api.doc({
+@api.doc(params={
     'contract' : 'fa12 KT contract address',
     'adm' : 'tz address'
 })
@@ -177,7 +178,7 @@ class set_administrator_fa12(Resource):
 # Maintence
 # Get adm
 @api.route('/get_administrator')
-@api.doc({
+@api.doc(params={
     'kt' : 'fa12 KT contract address'
 })
 class get_administrator_fa12(Resource):
@@ -197,7 +198,7 @@ class get_administrator_fa12(Resource):
             return 500
 
 @api.route('/mint')
-@api.doc({
+@api.doc(params={
     'contract' : 'fa12 kt address',
     'to' : 'tz address destination',
     'value' : 'nat'
@@ -207,16 +208,16 @@ class mint_fa12(Resource):
         try:
             payload = v.read_requests(request)
             pytz = v.read_session(session)
-
+            print(payload)
             ci = pytz.contract(payload['contract'])
-            r = ci.mint({"to" : payload['to'], "value": int(payload['amount'])}).inject()
+            r = ci.mint({"to" : payload['to'], "value": int(payload['value'])}).inject()
 
             return r
         except:
             return 500
 
 @api.route('/burn')
-@api.doc({
+@api.doc(params={
     'contract' : 'fa12 kt address',
     'from' : 'tz address',
     'value' : 'nat'
@@ -228,7 +229,7 @@ class burn_fa12(Resource):
             pytz = v.read_session(session)
 
             ci = pytz.contract(payload['contract'])
-            r = ci.burn({"from" : payload['from'], "value": int(payload['amount'])}).inject()
+            r = ci.burn({"from" : payload['from'], "value": int(payload['value'])}).inject()
 
             return r
         except:

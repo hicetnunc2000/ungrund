@@ -1,5 +1,5 @@
 
-from flask import request, session, make_response
+from flask import request, session, make_response, jsonify
 from flask_restx import fields, Resource, Api, Namespace
 from flask_cors import CORS, cross_origin
 from werkzeug import FileStorage
@@ -23,29 +23,29 @@ api = Namespace('keys', description='generate keys, activate, reveal')
 upload_parser = api.parser()
 upload_parser.add_argument('file', location='files',
                        type=FileStorage, required=True)
-                       
+upload_parser.add_argument('network', choices=('mainnet', 'carthagenet'))
+
 # POST key configuration from faucet wallet
 
 @api.route('/faucet')
 @api.expect(upload_parser)
-@api.doc(params={ 
-    'network' : 'mainnet / carthagenet' 
-    })
 class faucet(Resource):
     
     @api.expect(type)
     def post(self):
         try:
             args = upload_parser.parse_args()
-            uploaded_faucet = args['file'].read()
+
+            uploaded_faucet = json.loads(args['file'].read())
 
             session['auth'] = 'faucet'
             session['faucet'] = uploaded_faucet
-            session['network'] = request.args.get('network')
-                
-            p = Validate().read_session(session)
+            session['network'] = args['network']
+
+            v = Validate() 
+            p = v.read_session(session)
             
-            return session
+            return p.key.public_key_hash()
 
         except:
             return 500
@@ -62,15 +62,23 @@ class faucet(Resource):
 class mnemonics(Resource):
     def post(self):
         try:
+            if (request.data.__len__() == 0):
 
-            session['auth'] = 'mnemonic'
-            session['mnemonic'] = request.args.get('mnemonic')
-            session['password'] = request.args.get('password')
-            session['email'] = request.args.get('email')
-            session['network'] = request.args.get('network', '')
+                session['auth'] = 'mnemonic'
+                session['mnemonic'] = request.args.get('mnemonic')
+                session['password'] = request.args.get('password')
+                session['email'] = request.args.get('email')
+                session['network'] = request.args.get('network')
+
+            else:
+                req = json.loads(request.data)
+                session['auth'] = 'mnemonic'
+                session['mnemonic'] = req['mnemonic']
+                session['password'] = req['password']
+                session['email'] = req['email']
+                session['network'] = req['network']
+
                 
-            #p = Validate().read_session(session)
-
             return session
 
         except:

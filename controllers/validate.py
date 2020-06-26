@@ -27,7 +27,8 @@ class Validate():
     
     def read_faucet(self, sess):
 
-        faucet = json.loads(sess['faucet'].decode("utf-8"))
+        faucet = sess['faucet']
+        #print(faucet)
         path = './faucets/{}.json'.format(faucet['pkh'])
             
         with open(path, 'w') as outfile:
@@ -37,7 +38,7 @@ class Validate():
         p = pytezos.using(key = k, shell = sess['network'])
         #os.remove(path)     
 
-        print(k.public_key_hash())
+        #print(k.public_key_hash())
 
         return p
   

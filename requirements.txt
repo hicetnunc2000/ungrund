@@ -2,7 +2,7 @@ flask
 flask_restx
 feedparser
 conseil
-pytezos[crypto]
+pytezos==2.5.1
 werkzeug==0.16.1
 pyopenssl
 flask-cors
