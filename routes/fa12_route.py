@@ -19,7 +19,7 @@ v = Validate()
 api = Namespace('fa12', description='publish and other entrypoints')
 
 @api.route('/publish')
-@api.doc({
+@api.doc(params={
     'total_supply' : 'total supply of tokens'
 })
 class publish_fa12(Resource):
@@ -32,11 +32,7 @@ class publish_fa12(Resource):
             contract = Contract.from_file('./smart_contracts/fa12.tz')
             op = pytz.origination(script=contract.script(storage={'ledger': {}, 'admin': pytz.key.public_key_hash(
                 ), 'paused': False, 'totalSupply': payload['total_supply']})).autofill().sign().inject(_async=False, num_blocks_wait=2)
-                # originated_kt = OperationResult.originated_contracts(op)
-                # op['contents'][0]['metadata']
-                # op['hash']
 
-            #return OperationResult.originated_contracts(op)[0]
             return v.filter_response(op)
         except:
             return 500
