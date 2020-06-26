@@ -34,8 +34,8 @@ api = Api(version = 'v1.0.0',
 # NAMESPACES
 
 api.add_namespace(fa12_api)
-api.add_namespace(fa2_api)
-api.add_namespace(storage_api)
+#api.add_namespace(fa2_api)
+#api.add_namespace(storage_api)
 api.add_namespace(keys_api)
 
 api.init_app(app)
