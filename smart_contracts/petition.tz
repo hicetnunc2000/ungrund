@@ -1,0 +1,220 @@
+parameter (or (pair %origin_entry (pair (pair (string %description) (string %ocasion)) (string %proposal)) (timestamp %time_out)) (pair %sign (string %cpf) (string %name)));
+
+storage (pair (pair (pair (pair (pair (string %description) (bool %immutability)) (string %ocasion)) (string %proposal)) (map %signatures string string)) (timestamp %time_out));
+
+code
+  {
+    DUP;
+    CDR;
+    SWAP;
+    CAR;
+    IF_LEFT
+      {
+        PUSH bool False;
+        DIG 2;
+        DUP;
+        DUG 3;
+        CAAAADR;
+        COMPARE;
+        EQ;
+        IF
+          {
+          }
+          {
+            PUSH string "WrongCondition: self.data.immutability == False";
+            FAILWITH;
+          };
+        SWAP;
+        DUP;
+        DUG 2;
+        DUP;
+        CDR;
+        SWAP;
+        CAR;
+        DUP;
+        CDR;
+        SWAP;
+        CAAR;
+        DIG 3;
+        DUP;
+        DUG 4;
+        CADR;
+        SWAP;
+        PAIR;
+        PAIR;
+        PAIR;
+        DUG 2;
+        SWAP;
+        DROP;
+        SWAP;
+        DUP;
+        DUG 2;
+        DUP;
+        CDR;
+        SWAP;
+        CAR;
+        DUP;
+        CDR;
+        SWAP;
+        CAR;
+        DUP;
+        CDR;
+        SWAP;
+        CAAR;
+        DIG 4;
+        DUP;
+        DUG 5;
+        CAADR;
+        SWAP;
+        PAIR;
+        PAIR;
+        PAIR;
+        PAIR;
+        DUG 2;
+        SWAP;
+        DROP;
+        SWAP;
+        DUP;
+        DUG 2;
+        DUP;
+        CDR;
+        SWAP;
+        CAR;
+        DUP;
+        CDR;
+        SWAP;
+        CAR;
+        DUP;
+        CDR;
+        SWAP;
+        CAR;
+        DUP;
+        CDR;
+        SWAP;
+        CADR;
+        DIG 5;
+        DUP;
+        DUG 6;
+        CAAAR;
+        PAIR;
+        PAIR;
+        PAIR;
+        PAIR;
+        PAIR;
+        DUG 2;
+        SWAP;
+        DROP;
+        SWAP;
+        DUP;
+        DUG 2;
+        CAR;
+        SWAP;
+        DUP;
+        DUG 2;
+        CDR;
+        SWAP;
+        PAIR;
+        DUG 2;
+        SWAP;
+        DROP;
+        SWAP;
+        DUP;
+        DUG 2;
+        DUP;
+        CDR;
+        SWAP;
+        CAR;
+        DUP;
+        CDR;
+        SWAP;
+        CAR;
+        DUP;
+        CDR;
+        SWAP;
+        CAR;
+        DUP;
+        CDR;
+        SWAP;
+        CAAR;
+        PUSH bool True;
+        SWAP;
+        PAIR;
+        PAIR;
+        PAIR;
+        PAIR;
+        PAIR;
+        DUG 2;
+        DROP;
+        DROP;
+      }
+      {
+        SWAP;
+        DUP;
+        DUG 2;
+        CDR;
+        NOW;
+        COMPARE;
+        LT;
+        IF
+          {
+          }
+          {
+            PUSH string "WrongCondition: sp.now < self.data.time_out";
+            FAILWITH;
+          };
+        SWAP;
+        DUP;
+        DUG 2;
+        CADR;
+        ITER
+          {
+            CAR;
+            SWAP;
+            DUP;
+            DUG 2;
+            CAR;
+            SWAP;
+            DUP;
+            DUG 2;
+            COMPARE;
+            NEQ;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: e != params.cpf";
+                FAILWITH;
+              };
+            DROP;
+          };
+        SWAP;
+        DUP;
+        DUG 2;
+        DUP;
+        CDR;
+        SWAP;
+        CAR;
+        DUP;
+        CAR;
+        SWAP;
+        CDR;
+        DIG 3;
+        DUP;
+        DUG 4;
+        CDR;
+        SOME;
+        DIG 4;
+        DUP;
+        DUG 5;
+        CAR;
+        UPDATE;
+        SWAP;
+        PAIR;
+        PAIR;
+        DUG 2;
+        DROP;
+        DROP;
+      };
+    NIL operation;
+    PAIR;
+  }

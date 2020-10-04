@@ -1,0 +1,503 @@
+parameter (or (or (nat %cancel_request) (pair %create_request (address %client) (pair %params (pair (nat %amount) (pair (nat %client_request_id) (bytes %job_id))) (pair (list %parameters (pair string (map string (or (bytes %bytes) (or (int %int) (string %string)))))) (pair (address %target) (timestamp %timeout)))))) (or (pair %fulfill_request (nat %request_id) (or %result (bytes %bytes) (or (int %int) (string %string)))) (pair %setup (bool %active) (pair (nat %min_amount) (int %min_timeout_minutes)))));
+
+storage (pair (pair (pair (bool %active) (address %admin)) (pair (nat %min_amount) (int %min_timeout_minutes))) (pair (pair (nat %next_id) (big_map %requests nat (pair (pair (nat %amount) (pair (address %client) (nat %client_request_id))) (pair (pair (bytes %job_id) (list %parameters (pair string (map string (or (bytes %bytes) (or (int %int) (string %string))))))) (pair (address %target) (timestamp %timeout)))))) (pair (big_map %reverse_requests (pair (address %client) (nat %client_request_id)) nat) (address %token))));
+
+code
+  {
+    DUP;
+    CDR;
+    SWAP;
+    CAR;
+    IF_LEFT
+      {
+        IF_LEFT
+          {
+            SWAP;
+            DUP;
+            DUG 2;
+            CDDAR;
+            SWAP;
+            DUP;
+            DUG 2;
+            SENDER;
+            PAIR %client %client_request_id;
+            GET;
+            IF_SOME
+              {
+              }
+              {
+                PUSH string "Get-item:104";
+                FAILWITH;
+              };
+            DIG 2;
+            DUP;
+            DUG 3;
+            CDADR;
+            SWAP;
+            DUP;
+            DUG 2;
+            GET;
+            IF_SOME
+              {
+              }
+              {
+                PUSH string "Get-item:105";
+                FAILWITH;
+              };
+            DUP;
+            CDDDR;
+            NOW;
+            SWAP;
+            COMPARE;
+            LE;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: request.value.timeout <= sp.now";
+                FAILWITH;
+              };
+            NIL operation;
+            DIG 4;
+            DUP;
+            DUG 5;
+            CDDDR;
+            CONTRACT %transfer ( list ( pair ( address %from_ ) ( list %txs ( pair ( address %to_ ) ( pair ( nat %token_id ) ( nat %amount ) ) ) ) ) );
+            IF_SOME
+              {
+              }
+              {
+                PUSH unit Unit;
+                FAILWITH;
+              };
+            PUSH mutez 0;
+            PUSH ( list ( pair ( address %from_ ) ( list %txs ( pair ( address %to_ ) ( pair ( nat %token_id ) ( nat %amount ) ) ) ) ) )
+              {
+              };
+            PUSH ( list ( pair ( address %to_ ) ( pair ( nat %token_id ) ( nat %amount ) ) ) )
+              {
+              };
+            DIG 5;
+            DUP;
+            DUG 6;
+            CAAR;
+            PUSH nat 0;
+            PAIR %token_id %amount;
+            DIG 6;
+            DUP;
+            DUG 7;
+            CADAR;
+            PAIR %to_;
+            CONS;
+            SELF;
+            DIG 6;
+            DROP;
+            DIG 7;
+            DROP;
+            ADDRESS;
+            PAIR %from_ %txs;
+            CONS;
+            TRANSFER_TOKENS;
+            CONS;
+            DIG 2;
+            DUP;
+            CAR;
+            SWAP;
+            CDR;
+            DUP;
+            CDR;
+            SWAP;
+            CAR;
+            DUP;
+            CAR;
+            SWAP;
+            CDR;
+            NONE ( pair ( pair ( nat %amount ) ( pair ( address %client ) ( nat %client_request_id ) ) ) ( pair ( pair ( bytes %job_id ) ( list %parameters ( pair string ( map string ( or ( bytes %bytes ) ( or ( int %int ) ( string %string ) ) ) ) ) ) ) ( pair ( address %target ) ( timestamp %timeout ) ) ) );
+            DIG 6;
+            UPDATE;
+            SWAP;
+            PAIR;
+            PAIR;
+            SWAP;
+            PAIR;
+            SWAP;
+          }
+          {
+            SWAP;
+            DUP;
+            DUG 2;
+            CDDDR;
+            SENDER;
+            COMPARE;
+            EQ;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: sp.sender == self.data.token";
+                FAILWITH;
+              };
+            SWAP;
+            DUP;
+            DUG 2;
+            CAAAR;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: self.data.active";
+                FAILWITH;
+              };
+            DUP;
+            CDAAR;
+            DIG 2;
+            DUP;
+            DUG 3;
+            CADAR;
+            COMPARE;
+            LE;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: self.data.min_amount <= params.params.amount";
+                FAILWITH;
+              };
+            DUP;
+            CDDDDR;
+            NOW;
+            PUSH int 60;
+            DIG 4;
+            DUP;
+            DUG 5;
+            CADDR;
+            MUL;
+            ADD;
+            COMPARE;
+            LE;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: sp.add_seconds ( sp.now, self.data.min_timeout_minutes * 60 ) <= params.params.timeout";
+                FAILWITH;
+              };
+            SWAP;
+            DUP;
+            DUG 2;
+            CDDAR;
+            SWAP;
+            DUP;
+            DUG 2;
+            CDADAR;
+            DIG 2;
+            DUP;
+            DUG 3;
+            CAR;
+            PAIR %client %client_request_id;
+            MEM;
+            IF
+              {
+                PUSH string "WrongCondition: ~ ( self.data.reverse_requests.contains ( sp.record ( client = params.client, client_request_id = params.params.client_request_id ) ) ) ";
+                FAILWITH;
+              }
+              {
+              };
+            SWAP;
+            DUP;
+            DUG 2;
+            DUP;
+            CAR;
+            SWAP;
+            CDR;
+            DUP;
+            CAR;
+            SWAP;
+            CDR;
+            DUP;
+            CDR;
+            SWAP;
+            CAR;
+            DIG 5;
+            CDAAR;
+            SOME;
+            DIG 5;
+            DUP;
+            DUG 6;
+            CDADAR;
+            DIG 6;
+            DUP;
+            DUG 7;
+            CAR;
+            PAIR %client %client_request_id;
+            UPDATE;
+            PAIR;
+            SWAP;
+            PAIR;
+            SWAP;
+            PAIR;
+            SWAP;
+            SWAP;
+            DUP;
+            DUG 2;
+            DUP;
+            CAR;
+            SWAP;
+            CDR;
+            DUP;
+            CDR;
+            SWAP;
+            CAR;
+            DUP;
+            CAR;
+            SWAP;
+            CDR;
+            DIG 4;
+            DUP;
+            DUG 5;
+            CDDDDR;
+            DIG 5;
+            DUP;
+            DUG 6;
+            CDDDAR;
+            PAIR %target %timeout;
+            DIG 5;
+            DUP;
+            DUG 6;
+            CDDAR;
+            DIG 6;
+            DUP;
+            DUG 7;
+            CDADDR;
+            PAIR %job_id %parameters;
+            PAIR;
+            DIG 5;
+            DUP;
+            DUG 6;
+            CDADAR;
+            DIG 6;
+            DUP;
+            DUG 7;
+            CAR;
+            PAIR %client %client_request_id;
+            DIG 6;
+            CDAAR;
+            PAIR %amount;
+            PAIR;
+            SOME;
+            DIG 5;
+            CDAAR;
+            UPDATE;
+            SWAP;
+            PAIR;
+            PAIR;
+            SWAP;
+            PAIR;
+            DUP;
+            DUP;
+            CAR;
+            SWAP;
+            CDR;
+            DUP;
+            CDR;
+            SWAP;
+            CADR;
+            PUSH nat 1;
+            DIG 4;
+            CDAAR;
+            ADD;
+            PAIR;
+            PAIR;
+            SWAP;
+            PAIR;
+            NIL operation;
+          };
+      }
+      {
+        IF_LEFT
+          {
+            SENDER;
+            DIG 2;
+            DUP;
+            DUG 3;
+            CAADR;
+            COMPARE;
+            EQ;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: self.data.admin == sp.sender";
+                FAILWITH;
+              };
+            SWAP;
+            DUP;
+            DUG 2;
+            CDADR;
+            SWAP;
+            DUP;
+            DUG 2;
+            CAR;
+            GET;
+            IF_SOME
+              {
+              }
+              {
+                PUSH string "Get-item:44";
+                FAILWITH;
+              };
+            NIL operation;
+            DIG 3;
+            DUP;
+            DUG 4;
+            CDDDR;
+            CONTRACT %transfer ( list ( pair ( address %from_ ) ( list %txs ( pair ( address %to_ ) ( pair ( nat %token_id ) ( nat %amount ) ) ) ) ) );
+            IF_SOME
+              {
+              }
+              {
+                PUSH unit Unit;
+                FAILWITH;
+              };
+            PUSH mutez 0;
+            PUSH ( list ( pair ( address %from_ ) ( list %txs ( pair ( address %to_ ) ( pair ( nat %token_id ) ( nat %amount ) ) ) ) ) )
+              {
+              };
+            PUSH ( list ( pair ( address %to_ ) ( pair ( nat %token_id ) ( nat %amount ) ) ) )
+              {
+              };
+            DIG 5;
+            DUP;
+            DUG 6;
+            CAAR;
+            PUSH nat 0;
+            PAIR %token_id %amount;
+            DIG 8;
+            DUP;
+            DUG 9;
+            CAADR;
+            PAIR %to_;
+            CONS;
+            SELF;
+            ADDRESS;
+            PAIR %from_ %txs;
+            CONS;
+            TRANSFER_TOKENS;
+            CONS;
+            SWAP;
+            DUP;
+            DUG 2;
+            CDDAR;
+            CONTRACT ( pair ( nat %client_request_id ) ( or %result ( bytes %bytes ) ( or ( int %int ) ( string %string ) ) ) );
+            IF_SOME
+              {
+              }
+              {
+                PUSH unit Unit;
+                FAILWITH;
+              };
+            PUSH mutez 0;
+            DIG 4;
+            DUP;
+            DUG 5;
+            CDR;
+            DIG 4;
+            CADDR;
+            PAIR %client_request_id %result;
+            TRANSFER_TOKENS;
+            CONS;
+            DIG 2;
+            DUP;
+            CAR;
+            SWAP;
+            CDR;
+            DUP;
+            CDR;
+            SWAP;
+            CAR;
+            DUP;
+            CAR;
+            SWAP;
+            CDR;
+            NONE ( pair ( pair ( nat %amount ) ( pair ( address %client ) ( nat %client_request_id ) ) ) ( pair ( pair ( bytes %job_id ) ( list %parameters ( pair string ( map string ( or ( bytes %bytes ) ( or ( int %int ) ( string %string ) ) ) ) ) ) ) ( pair ( address %target ) ( timestamp %timeout ) ) ) );
+            DIG 6;
+            CAR;
+            UPDATE;
+            SWAP;
+            PAIR;
+            PAIR;
+            SWAP;
+            PAIR;
+            SWAP;
+          }
+          {
+            SENDER;
+            DIG 2;
+            DUP;
+            DUG 3;
+            CAADR;
+            COMPARE;
+            EQ;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: self.data.admin == sp.sender";
+                FAILWITH;
+              };
+            SWAP;
+            DUP;
+            CDR;
+            SWAP;
+            CAR;
+            DUP;
+            CDR;
+            SWAP;
+            CADR;
+            DIG 3;
+            DUP;
+            DUG 4;
+            CAR;
+            PAIR;
+            PAIR;
+            PAIR;
+            SWAP;
+            SWAP;
+            DUP;
+            CDR;
+            SWAP;
+            CAR;
+            DUP;
+            CAR;
+            SWAP;
+            CDAR;
+            DIG 3;
+            DUP;
+            DUG 4;
+            CDDR;
+            SWAP;
+            PAIR;
+            SWAP;
+            PAIR;
+            PAIR;
+            SWAP;
+            SWAP;
+            DUP;
+            CDR;
+            SWAP;
+            CAR;
+            DUP;
+            CAR;
+            SWAP;
+            CDDR;
+            DIG 3;
+            CDAR;
+            PAIR;
+            SWAP;
+            PAIR;
+            PAIR;
+            NIL operation;
+          };
+      };
+    PAIR;
+  }
