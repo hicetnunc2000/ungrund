@@ -1,0 +1,542 @@
+parameter (or (pair %opensource_origin (int %expire) (pair (nat %goal) (string %meta))) (or (pair %pure_nfts (address %address) (pair (nat %amount) (nat %token_id))) (address %update_adm)));
+storage   (pair (pair (big_map %auth address nat) (nat %counter)) (pair (address %fa2) (address %oracle)));
+code
+  {
+    DUP;        # pair @parameter @storage : pair @parameter @storage
+    CDR;        # @storage : pair @parameter @storage
+    SWAP;       # pair @parameter @storage : @storage
+    CAR;        # @parameter : @storage
+    IF_LEFT
+      {
+        # == opensource_origin ==
+        # sp.verify(((params.expire == 3) | (params.expire == 6)) | (params.expire == 9)) # @parameter%opensource_origin : @storage
+        DUP;        # @parameter%opensource_origin : @parameter%opensource_origin : @storage
+        CAR;        # int : @parameter%opensource_origin : @storage
+        PUSH int 3; # int : int : @parameter%opensource_origin : @storage
+        COMPARE;    # int : @parameter%opensource_origin : @storage
+        EQ;         # bool : @parameter%opensource_origin : @storage
+        IF
+          {
+            PUSH bool True; # bool : @parameter%opensource_origin : @storage
+          }
+          {
+            DUP;        # @parameter%opensource_origin : @parameter%opensource_origin : @storage
+            CAR;        # int : @parameter%opensource_origin : @storage
+            PUSH int 6; # int : int : @parameter%opensource_origin : @storage
+            COMPARE;    # int : @parameter%opensource_origin : @storage
+            EQ;         # bool : @parameter%opensource_origin : @storage
+          }; # bool : @parameter%opensource_origin : @storage
+        IF
+          {
+            PUSH bool True; # bool : @parameter%opensource_origin : @storage
+          }
+          {
+            DUP;        # @parameter%opensource_origin : @parameter%opensource_origin : @storage
+            CAR;        # int : @parameter%opensource_origin : @storage
+            PUSH int 9; # int : int : @parameter%opensource_origin : @storage
+            COMPARE;    # int : @parameter%opensource_origin : @storage
+            EQ;         # bool : @parameter%opensource_origin : @storage
+          }; # bool : @parameter%opensource_origin : @storage
+        IF
+          {}
+          {
+            PUSH string "WrongCondition: ((params.expire == 3) | (params.expire == 6)) | (params.expire == 9)"; # string : @parameter%opensource_origin : @storage
+            FAILWITH;   # FAILED
+          }; # @parameter%opensource_origin : @storage
+        SWAP;       # @storage : @parameter%opensource_origin
+        # create_contract_109 = sp.local("create_contract_109", create contract ...) # @storage : @parameter%opensource_origin
+        DUP;        # @storage : @storage : @parameter%opensource_origin
+        DUG 2;      # @storage : @parameter%opensource_origin : @storage
+        CADR;       # nat : @parameter%opensource_origin : @storage
+        SELF;       # contract (or (pair %opensource_origin (int %expire) (pair (nat %goal) (string %meta))) (or (pair %pure_nfts (address %address) (pair (nat %amount) (nat %token_id))) (address %update_adm))) : nat : @parameter%opensource_origin : @storage
+        ADDRESS;    # address : nat : @parameter%opensource_origin : @storage
+        PAIR %protocol %token_id; # pair (address %protocol) (nat %token_id) : @parameter%opensource_origin : @storage
+        DIG 2;      # @storage : pair (address %protocol) (nat %token_id) : @parameter%opensource_origin
+        DUP;        # @storage : @storage : pair (address %protocol) (nat %token_id) : @parameter%opensource_origin
+        DUG 3;      # @storage : pair (address %protocol) (nat %token_id) : @parameter%opensource_origin : @storage
+        CDDR;       # address : pair (address %protocol) (nat %token_id) : @parameter%opensource_origin : @storage
+        DIG 2;      # @parameter%opensource_origin : address : pair (address %protocol) (nat %token_id) : @storage
+        DUP;        # @parameter%opensource_origin : @parameter%opensource_origin : address : pair (address %protocol) (nat %token_id) : @storage
+        DUG 3;      # @parameter%opensource_origin : address : pair (address %protocol) (nat %token_id) : @parameter%opensource_origin : @storage
+        CDDR;       # string : address : pair (address %protocol) (nat %token_id) : @parameter%opensource_origin : @storage
+        PAIR %meta %oracle; # pair (string %meta) (address %oracle) : pair (address %protocol) (nat %token_id) : @parameter%opensource_origin : @storage
+        PAIR;       # pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @parameter%opensource_origin : @storage
+        PUSH mutez 1000000; # mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @parameter%opensource_origin : @storage
+        DIG 2;      # @parameter%opensource_origin : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        DUP;        # @parameter%opensource_origin : @parameter%opensource_origin : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        DUG 3;      # @parameter%opensource_origin : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @parameter%opensource_origin : @storage
+        CDAR;       # nat : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @parameter%opensource_origin : @storage
+        MUL;        # mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @parameter%opensource_origin : @storage
+        PUSH timestamp "1599219097"; # timestamp : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @parameter%opensource_origin : @storage
+        PUSH int 60; # int : timestamp : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @parameter%opensource_origin : @storage
+        DUP;        # int : int : timestamp : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @parameter%opensource_origin : @storage
+        PUSH int 24; # int : int : int : timestamp : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @parameter%opensource_origin : @storage
+        DIG 6;      # @parameter%opensource_origin : int : int : int : timestamp : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        CAR;        # int : int : int : int : timestamp : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        PUSH int 30; # int : int : int : int : int : timestamp : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        MUL;        # int : int : int : int : timestamp : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        MUL;        # int : int : int : timestamp : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        MUL;        # int : int : timestamp : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        MUL;        # int : timestamp : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        ADD;        # timestamp : mutez : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        PAIR %expire %goal; # pair (timestamp %expire) (mutez %goal) : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        SENDER;     # address : pair (timestamp %expire) (mutez %goal) : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        PAIR %admin; # pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : @storage
+        PAIR;       # pair (pair (address %admin) (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id))) : @storage
+        PUSH mutez 0; # mutez : pair (pair (address %admin) (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id))) : @storage
+        NONE key_hash; # option key_hash : mutez : pair (pair (address %admin) (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id))) : @storage
+        CREATE_CONTRACT
+         { parameter (or (or (unit %contribute) (pair %init (pair (address %admin) (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id))))) (or (option %oracle_delegation key_hash) (unit %withdraw)));
+           storage   (pair (pair (address %admin) (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id))));
+           code
+             {
+               DUP;        # pair @parameter @storage : pair @parameter @storage
+               CDR;        # @storage : pair @parameter @storage
+               SWAP;       # pair @parameter @storage : @storage
+               CAR;        # @parameter : @storage
+               IF_LEFT
+                 {
+                   IF_LEFT
+                     {
+                       DROP;       # @storage
+                       # == contribute ==
+                       # sp.verify(sp.sender != self.data.admin) # @storage
+                       DUP;        # @storage : @storage
+                       CAAR;       # address : @storage
+                       SENDER;     # address : address : @storage
+                       COMPARE;    # int : @storage
+                       NEQ;        # bool : @storage
+                       IF
+                         {}
+                         {
+                           PUSH string "WrongCondition: sp.sender != self.data.admin"; # string : @storage
+                           FAILWITH;   # FAILED
+                         }; # @storage
+                       # sp.verify(sp.amount > sp.tez(5)) # @storage
+                       PUSH mutez 5000000; # mutez : @storage
+                       AMOUNT;     # mutez : mutez : @storage
+                       COMPARE;    # int : @storage
+                       GT;         # bool : @storage
+                       IF
+                         {}
+                         {
+                           PUSH string "WrongCondition: sp.amount > sp.tez(5)"; # string : @storage
+                           FAILWITH;   # FAILED
+                         }; # @storage
+                       # sp.transfer(sp.record(address = sp.sender, amount = sp.fst(sp.ediv(sp.amount, sp.tez(1)).open_some()), token_id = self.data.token_id), sp.tez(0), sp.contract(sp.TRecord(address = sp.TAddress, amount = sp.TNat, token_id = sp.TNat).layout(("address", ("amount", "token_id"))), self.data.protocol, entry_point='pure_nfts').open_some()) # @storage
+                       DUP;        # @storage : @storage
+                       CDDAR;      # address : @storage
+                       CONTRACT %pure_nfts (pair (address %address) (pair (nat %amount) (nat %token_id))); # option (contract (pair (address %address) (pair (nat %amount) (nat %token_id)))) : @storage
+                       NIL operation; # list operation : option (contract (pair (address %address) (pair (nat %amount) (nat %token_id)))) : @storage
+                       SWAP;       # option (contract (pair (address %address) (pair (nat %amount) (nat %token_id)))) : list operation : @storage
+                       IF_SOME
+                         {}
+                         {
+                           PUSH int 50; # int : list operation : @storage
+                           FAILWITH;   # FAILED
+                         }; # @some : list operation : @storage
+                       PUSH mutez 0; # mutez : @some : list operation : @storage
+                       DIG 3;      # @storage : mutez : @some : list operation
+                       DUP;        # @storage : @storage : mutez : @some : list operation
+                       DUG 4;      # @storage : mutez : @some : list operation : @storage
+                       CDDDR;      # nat : mutez : @some : list operation : @storage
+                       PUSH mutez 1000000; # mutez : nat : mutez : @some : list operation : @storage
+                       AMOUNT;     # mutez : mutez : nat : mutez : @some : list operation : @storage
+                       EDIV;       # option (pair nat mutez) : nat : mutez : @some : list operation : @storage
+                       IF_SOME
+                         {}
+                         {
+                           PUSH int 44; # int : nat : mutez : @some : list operation : @storage
+                           FAILWITH;   # FAILED
+                         }; # @some : nat : mutez : @some : list operation : @storage
+                       CAR;        # nat : nat : mutez : @some : list operation : @storage
+                       PAIR %amount %token_id; # pair (nat %amount) (nat %token_id) : mutez : @some : list operation : @storage
+                       SENDER;     # address : pair (nat %amount) (nat %token_id) : mutez : @some : list operation : @storage
+                       PAIR %address; # pair (address %address) (pair (nat %amount) (nat %token_id)) : mutez : @some : list operation : @storage
+                       TRANSFER_TOKENS; # operation : list operation : @storage
+                       CONS;       # list operation : @storage
+                     }
+                     {
+                       SWAP;       # @storage : @parameter%init
+                       # == init ==
+                       # self.data.protocol = params.protocol # @storage : @parameter%init
+                       DUP;        # @storage : @storage : @parameter%init
+                       CAR;        # pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : @storage : @parameter%init
+                       SWAP;       # @storage : pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CDR;        # pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       DUP;        # pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CAR;        # pair (string %meta) (address %oracle) : pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       SWAP;       # pair (pair (string %meta) (address %oracle)) (pair (address %protocol) (nat %token_id)) : pair (string %meta) (address %oracle) : pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CDDR;       # nat : pair (string %meta) (address %oracle) : pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       DIG 3;      # @parameter%init : nat : pair (string %meta) (address %oracle) : pair (address %admin) (pair (timestamp %expire) (mutez %goal))
+                       DUP;        # @parameter%init : @parameter%init : nat : pair (string %meta) (address %oracle) : pair (address %admin) (pair (timestamp %expire) (mutez %goal))
+                       DUG 4;      # @parameter%init : nat : pair (string %meta) (address %oracle) : pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CDDAR;      # address : nat : pair (string %meta) (address %oracle) : pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       PAIR;       # pair address nat : pair (string %meta) (address %oracle) : pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       SWAP;       # pair (string %meta) (address %oracle) : pair address nat : pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       PAIR;       # pair (pair (string %meta) (address %oracle)) (pair address nat) : pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       SWAP;       # pair (address %admin) (pair (timestamp %expire) (mutez %goal)) : pair (pair (string %meta) (address %oracle)) (pair address nat) : @parameter%init
+                       PAIR;       # pair (pair (address %admin) (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair address nat)) : @parameter%init
+                       # self.data.admin = params.admin # pair (pair (address %admin) (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair address nat)) : @parameter%init
+                       DUP;        # pair (pair (address %admin) (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair address nat)) : pair (pair (address %admin) (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair address nat)) : @parameter%init
+                       CDR;        # pair (pair (string %meta) (address %oracle)) (pair address nat) : pair (pair (address %admin) (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair address nat)) : @parameter%init
+                       SWAP;       # pair (pair (address %admin) (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair address nat)) : pair (pair (string %meta) (address %oracle)) (pair address nat) : @parameter%init
+                       CADR;       # pair (timestamp %expire) (mutez %goal) : pair (pair (string %meta) (address %oracle)) (pair address nat) : @parameter%init
+                       DIG 2;      # @parameter%init : pair (timestamp %expire) (mutez %goal) : pair (pair (string %meta) (address %oracle)) (pair address nat)
+                       DUP;        # @parameter%init : @parameter%init : pair (timestamp %expire) (mutez %goal) : pair (pair (string %meta) (address %oracle)) (pair address nat)
+                       DUG 3;      # @parameter%init : pair (timestamp %expire) (mutez %goal) : pair (pair (string %meta) (address %oracle)) (pair address nat) : @parameter%init
+                       CAAR;       # address : pair (timestamp %expire) (mutez %goal) : pair (pair (string %meta) (address %oracle)) (pair address nat) : @parameter%init
+                       PAIR;       # pair address (pair (timestamp %expire) (mutez %goal)) : pair (pair (string %meta) (address %oracle)) (pair address nat) : @parameter%init
+                       PAIR;       # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair address nat)) : @parameter%init
+                       # self.data.oracle = params.oracle # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair address nat)) : @parameter%init
+                       DUP;        # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair address nat)) : pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair address nat)) : @parameter%init
+                       CAR;        # pair address (pair (timestamp %expire) (mutez %goal)) : pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair address nat)) : @parameter%init
+                       SWAP;       # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair (string %meta) (address %oracle)) (pair address nat)) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CDR;        # pair (pair (string %meta) (address %oracle)) (pair address nat) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       DUP;        # pair (pair (string %meta) (address %oracle)) (pair address nat) : pair (pair (string %meta) (address %oracle)) (pair address nat) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CDR;        # pair address nat : pair (pair (string %meta) (address %oracle)) (pair address nat) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       SWAP;       # pair (pair (string %meta) (address %oracle)) (pair address nat) : pair address nat : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CAAR;       # string : pair address nat : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       DIG 3;      # @parameter%init : string : pair address nat : pair address (pair (timestamp %expire) (mutez %goal))
+                       DUP;        # @parameter%init : @parameter%init : string : pair address nat : pair address (pair (timestamp %expire) (mutez %goal))
+                       DUG 4;      # @parameter%init : string : pair address nat : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CDADR;      # address : string : pair address nat : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       SWAP;       # string : address : pair address nat : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       PAIR;       # pair string address : pair address nat : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       PAIR;       # pair (pair string address) (pair address nat) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       SWAP;       # pair address (pair (timestamp %expire) (mutez %goal)) : pair (pair string address) (pair address nat) : @parameter%init
+                       PAIR;       # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : @parameter%init
+                       # self.data.token_id = params.token_id # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : @parameter%init
+                       DUP;        # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : @parameter%init
+                       CAR;        # pair address (pair (timestamp %expire) (mutez %goal)) : pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : @parameter%init
+                       SWAP;       # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CDR;        # pair (pair string address) (pair address nat) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       DUP;        # pair (pair string address) (pair address nat) : pair (pair string address) (pair address nat) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CAR;        # pair string address : pair (pair string address) (pair address nat) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       SWAP;       # pair (pair string address) (pair address nat) : pair string address : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CDAR;       # address : pair string address : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       DIG 3;      # @parameter%init : address : pair string address : pair address (pair (timestamp %expire) (mutez %goal))
+                       DUP;        # @parameter%init : @parameter%init : address : pair string address : pair address (pair (timestamp %expire) (mutez %goal))
+                       DUG 4;      # @parameter%init : address : pair string address : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CDDDR;      # nat : address : pair string address : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       SWAP;       # address : nat : pair string address : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       PAIR;       # pair address nat : pair string address : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       SWAP;       # pair string address : pair address nat : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       PAIR;       # pair (pair string address) (pair address nat) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       SWAP;       # pair address (pair (timestamp %expire) (mutez %goal)) : pair (pair string address) (pair address nat) : @parameter%init
+                       PAIR;       # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : @parameter%init
+                       # self.data.meta = params.meta # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : @parameter%init
+                       DUP;        # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : @parameter%init
+                       CAR;        # pair address (pair (timestamp %expire) (mutez %goal)) : pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : @parameter%init
+                       SWAP;       # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CDR;        # pair (pair string address) (pair address nat) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       DUP;        # pair (pair string address) (pair address nat) : pair (pair string address) (pair address nat) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CDR;        # pair address nat : pair (pair string address) (pair address nat) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       SWAP;       # pair (pair string address) (pair address nat) : pair address nat : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CADR;       # address : pair address nat : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       DIG 3;      # @parameter%init : address : pair address nat : pair address (pair (timestamp %expire) (mutez %goal))
+                       DUP;        # @parameter%init : @parameter%init : address : pair address nat : pair address (pair (timestamp %expire) (mutez %goal))
+                       DUG 4;      # @parameter%init : address : pair address nat : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       CDAAR;      # string : address : pair address nat : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       PAIR;       # pair string address : pair address nat : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       PAIR;       # pair (pair string address) (pair address nat) : pair address (pair (timestamp %expire) (mutez %goal)) : @parameter%init
+                       SWAP;       # pair address (pair (timestamp %expire) (mutez %goal)) : pair (pair string address) (pair address nat) : @parameter%init
+                       PAIR;       # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : @parameter%init
+                       # self.data.expire = params.expire # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : @parameter%init
+                       DUP;        # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : @parameter%init
+                       CDR;        # pair (pair string address) (pair address nat) : pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : @parameter%init
+                       SWAP;       # pair (pair address (pair (timestamp %expire) (mutez %goal))) (pair (pair string address) (pair address nat)) : pair (pair string address) (pair address nat) : @parameter%init
+                       CAR;        # pair address (pair (timestamp %expire) (mutez %goal)) : pair (pair string address) (pair address nat) : @parameter%init
+                       DUP;        # pair address (pair (timestamp %expire) (mutez %goal)) : pair address (pair (timestamp %expire) (mutez %goal)) : pair (pair string address) (pair address nat) : @parameter%init
+                       CAR;        # address : pair address (pair (timestamp %expire) (mutez %goal)) : pair (pair string address) (pair address nat) : @parameter%init
+                       SWAP;       # pair address (pair (timestamp %expire) (mutez %goal)) : address : pair (pair string address) (pair address nat) : @parameter%init
+                       CDDR;       # mutez : address : pair (pair string address) (pair address nat) : @parameter%init
+                       DIG 3;      # @parameter%init : mutez : address : pair (pair string address) (pair address nat)
+                       DUP;        # @parameter%init : @parameter%init : mutez : address : pair (pair string address) (pair address nat)
+                       DUG 4;      # @parameter%init : mutez : address : pair (pair string address) (pair address nat) : @parameter%init
+                       CADAR;      # timestamp : mutez : address : pair (pair string address) (pair address nat) : @parameter%init
+                       PAIR;       # pair timestamp mutez : address : pair (pair string address) (pair address nat) : @parameter%init
+                       SWAP;       # address : pair timestamp mutez : pair (pair string address) (pair address nat) : @parameter%init
+                       PAIR;       # pair address (pair timestamp mutez) : pair (pair string address) (pair address nat) : @parameter%init
+                       PAIR;       # pair (pair address (pair timestamp mutez)) (pair (pair string address) (pair address nat)) : @parameter%init
+                       # self.data.goal = params.goal # pair (pair address (pair timestamp mutez)) (pair (pair string address) (pair address nat)) : @parameter%init
+                       DUP;        # pair (pair address (pair timestamp mutez)) (pair (pair string address) (pair address nat)) : pair (pair address (pair timestamp mutez)) (pair (pair string address) (pair address nat)) : @parameter%init
+                       CDR;        # pair (pair string address) (pair address nat) : pair (pair address (pair timestamp mutez)) (pair (pair string address) (pair address nat)) : @parameter%init
+                       SWAP;       # pair (pair address (pair timestamp mutez)) (pair (pair string address) (pair address nat)) : pair (pair string address) (pair address nat) : @parameter%init
+                       CAR;        # pair address (pair timestamp mutez) : pair (pair string address) (pair address nat) : @parameter%init
+                       DUP;        # pair address (pair timestamp mutez) : pair address (pair timestamp mutez) : pair (pair string address) (pair address nat) : @parameter%init
+                       CAR;        # address : pair address (pair timestamp mutez) : pair (pair string address) (pair address nat) : @parameter%init
+                       SWAP;       # pair address (pair timestamp mutez) : address : pair (pair string address) (pair address nat) : @parameter%init
+                       CDAR;       # timestamp : address : pair (pair string address) (pair address nat) : @parameter%init
+                       DIG 3;      # @parameter%init : timestamp : address : pair (pair string address) (pair address nat)
+                       CADDR;      # mutez : timestamp : address : pair (pair string address) (pair address nat)
+                       SWAP;       # timestamp : mutez : address : pair (pair string address) (pair address nat)
+                       PAIR;       # pair timestamp mutez : address : pair (pair string address) (pair address nat)
+                       SWAP;       # address : pair timestamp mutez : pair (pair string address) (pair address nat)
+                       PAIR;       # pair address (pair timestamp mutez) : pair (pair string address) (pair address nat)
+                       PAIR;       # pair (pair address (pair timestamp mutez)) (pair (pair string address) (pair address nat))
+                       NIL operation; # list operation : pair (pair address (pair timestamp mutez)) (pair (pair string address) (pair address nat))
+                     }; # list operation : @storage
+                 }
+                 {
+                   IF_LEFT
+                     {
+                       SWAP;       # @storage : @parameter%oracle_delegation
+                       # == oracle_delegation ==
+                       # sp.verify(sp.sender == self.data.oracle) # @storage : @parameter%oracle_delegation
+                       DUP;        # @storage : @storage : @parameter%oracle_delegation
+                       DUG 2;      # @storage : @parameter%oracle_delegation : @storage
+                       CDADR;      # address : @parameter%oracle_delegation : @storage
+                       SENDER;     # address : address : @parameter%oracle_delegation : @storage
+                       COMPARE;    # int : @parameter%oracle_delegation : @storage
+                       EQ;         # bool : @parameter%oracle_delegation : @storage
+                       IF
+                         {}
+                         {
+                           PUSH string "WrongCondition: sp.sender == self.data.oracle"; # string : @parameter%oracle_delegation : @storage
+                           FAILWITH;   # FAILED
+                         }; # @parameter%oracle_delegation : @storage
+                       # sp.set_delegate(params.baker) # @parameter%oracle_delegation : @storage
+                       SET_DELEGATE; # operation : @storage
+                       NIL operation; # list operation : operation : @storage
+                       SWAP;       # operation : list operation : @storage
+                       CONS;       # list operation : @storage
+                     }
+                     {
+                       # == withdraw ==
+                       # sp.verify(self.data.admin == sp.sender) # @parameter%withdraw : @storage
+                       SENDER;     # address : @parameter%withdraw : @storage
+                       DIG 2;      # @storage : address : @parameter%withdraw
+                       DUP;        # @storage : @storage : address : @parameter%withdraw
+                       DUG 3;      # @storage : address : @parameter%withdraw : @storage
+                       CAAR;       # address : address : @parameter%withdraw : @storage
+                       COMPARE;    # int : @parameter%withdraw : @storage
+                       EQ;         # bool : @parameter%withdraw : @storage
+                       IF
+                         {}
+                         {
+                           PUSH string "WrongCondition: self.data.admin == sp.sender"; # string : @parameter%withdraw : @storage
+                           FAILWITH;   # FAILED
+                         }; # @parameter%withdraw : @storage
+                       # sp.verify(self.data.expire < sp.timestamp(1599219097)) # @parameter%withdraw : @storage
+                       PUSH timestamp "1599219097"; # timestamp : @parameter%withdraw : @storage
+                       DIG 2;      # @storage : timestamp : @parameter%withdraw
+                       DUP;        # @storage : @storage : timestamp : @parameter%withdraw
+                       DUG 3;      # @storage : timestamp : @parameter%withdraw : @storage
+                       CADAR;      # timestamp : timestamp : @parameter%withdraw : @storage
+                       COMPARE;    # int : @parameter%withdraw : @storage
+                       LT;         # bool : @parameter%withdraw : @storage
+                       IF
+                         {}
+                         {
+                           PUSH string "WrongCondition: self.data.expire < sp.timestamp(1599219097)"; # string : @parameter%withdraw : @storage
+                           FAILWITH;   # FAILED
+                         }; # @parameter%withdraw : @storage
+                       #  = sp.local("", sp.fst(sp.ediv(sp.balance, sp.tez(10)).open_some())) # @parameter%withdraw : @storage
+                       PUSH mutez 10000000; # mutez : @parameter%withdraw : @storage
+                       BALANCE;    # mutez : mutez : @parameter%withdraw : @storage
+                       EDIV;       # option (pair nat mutez) : @parameter%withdraw : @storage
+                       IF_SOME
+                         {}
+                         {
+                           PUSH int 65; # int : @parameter%withdraw : @storage
+                           FAILWITH;   # FAILED
+                         }; # @some : @parameter%withdraw : @storage
+                       CAR;        # nat : @parameter%withdraw : @storage
+                       # if .value < 1: # nat : @parameter%withdraw : @storage
+                       DUP;        # nat : nat : @parameter%withdraw : @storage
+                       PUSH nat 1; # nat : nat : nat : @parameter%withdraw : @storage
+                       COMPARE;    # int : nat : @parameter%withdraw : @storage
+                       GT;         # bool : nat : @parameter%withdraw : @storage
+                       IF
+                         {
+                           DROP 2;     # @storage
+                           # .value = 1 # @storage
+                           PUSH nat 1; # nat : @storage
+                         }
+                         {
+                           SWAP;       # @parameter%withdraw : nat : @storage
+                           DROP;       # nat : @storage
+                         }; # nat : @storage
+                       # sp.send(self.data.admin, sp.tez(.value)) # nat : @storage
+                       NIL operation; # list operation : nat : @storage
+                       DIG 2;      # @storage : list operation : nat
+                       DUP;        # @storage : @storage : list operation : nat
+                       DUG 3;      # @storage : list operation : nat : @storage
+                       CAAR;       # address : list operation : nat : @storage
+                       CONTRACT unit; # option (contract unit) : list operation : nat : @storage
+                       IF_SOME
+                         {}
+                         {
+                           PUSH int 69; # int : list operation : nat : @storage
+                           FAILWITH;   # FAILED
+                         }; # @some : list operation : nat : @storage
+                       PUSH mutez 1000000; # mutez : @some : list operation : nat : @storage
+                       DIG 3;      # nat : mutez : @some : list operation : @storage
+                       MUL;        # mutez : @some : list operation : @storage
+                       UNIT;       # unit : mutez : @some : list operation : @storage
+                       TRANSFER_TOKENS; # operation : list operation : @storage
+                       CONS;       # list operation : @storage
+                       # sp.send(sp.sender, sp.balance) # list operation : @storage
+                       SENDER;     # address : list operation : @storage
+                       CONTRACT unit; # option (contract unit) : list operation : @storage
+                       IF_SOME
+                         {}
+                         {
+                           PUSH int 70; # int : list operation : @storage
+                           FAILWITH;   # FAILED
+                         }; # @some : list operation : @storage
+                       BALANCE;    # mutez : @some : list operation : @storage
+                       UNIT;       # unit : mutez : @some : list operation : @storage
+                       TRANSFER_TOKENS; # operation : list operation : @storage
+                       CONS;       # list operation : @storage
+                     }; # list operation : @storage
+                 }; # list operation : @storage
+               NIL operation; # list operation : list operation : @storage
+               SWAP;       # list operation : list operation : @storage
+               ITER
+                 {
+                   CONS;       # list operation : @storage
+                 }; # list operation : @storage
+               PAIR;       # pair (list operation) @storage
+             }}; # operation : address : @storage
+        PAIR;       # pair operation address : @storage
+        # sp.operations().push(create_contract_109.value.operation) # pair operation address : @storage
+        DUP;        # pair operation address : pair operation address : @storage
+        CAR;        # operation : pair operation address : @storage
+        NIL operation; # list operation : operation : pair operation address : @storage
+        SWAP;       # operation : list operation : pair operation address : @storage
+        CONS;       # list operation : pair operation address : @storage
+        # self.data.auth[create_contract_109.value.address] = self.data.counter # list operation : pair operation address : @storage
+        DIG 2;      # @storage : list operation : pair operation address
+        DUP;        # @storage : @storage : list operation : pair operation address
+        DUG 3;      # @storage : list operation : pair operation address : @storage
+        DUP;        # @storage : @storage : list operation : pair operation address : @storage
+        CDR;        # pair (address %fa2) (address %oracle) : @storage : list operation : pair operation address : @storage
+        SWAP;       # @storage : pair (address %fa2) (address %oracle) : list operation : pair operation address : @storage
+        CAR;        # pair (big_map %auth address nat) (nat %counter) : pair (address %fa2) (address %oracle) : list operation : pair operation address : @storage
+        DUP;        # pair (big_map %auth address nat) (nat %counter) : pair (big_map %auth address nat) (nat %counter) : pair (address %fa2) (address %oracle) : list operation : pair operation address : @storage
+        CDR;        # nat : pair (big_map %auth address nat) (nat %counter) : pair (address %fa2) (address %oracle) : list operation : pair operation address : @storage
+        SWAP;       # pair (big_map %auth address nat) (nat %counter) : nat : pair (address %fa2) (address %oracle) : list operation : pair operation address : @storage
+        CAR;        # big_map address nat : nat : pair (address %fa2) (address %oracle) : list operation : pair operation address : @storage
+        DIG 4;      # pair operation address : big_map address nat : nat : pair (address %fa2) (address %oracle) : list operation : @storage
+        CDR;        # address : big_map address nat : nat : pair (address %fa2) (address %oracle) : list operation : @storage
+        DIG 5;      # @storage : address : big_map address nat : nat : pair (address %fa2) (address %oracle) : list operation
+        CADR;       # nat : address : big_map address nat : nat : pair (address %fa2) (address %oracle) : list operation
+        SOME;       # option nat : address : big_map address nat : nat : pair (address %fa2) (address %oracle) : list operation
+        SWAP;       # address : option nat : big_map address nat : nat : pair (address %fa2) (address %oracle) : list operation
+        UPDATE;     # big_map address nat : nat : pair (address %fa2) (address %oracle) : list operation
+        PAIR;       # pair (big_map address nat) nat : pair (address %fa2) (address %oracle) : list operation
+        PAIR;       # pair (pair (big_map address nat) nat) (pair (address %fa2) (address %oracle)) : list operation
+        # self.data.counter += 1 # pair (pair (big_map address nat) nat) (pair (address %fa2) (address %oracle)) : list operation
+        DUP;        # pair (pair (big_map address nat) nat) (pair (address %fa2) (address %oracle)) : pair (pair (big_map address nat) nat) (pair (address %fa2) (address %oracle)) : list operation
+        CDR;        # pair (address %fa2) (address %oracle) : pair (pair (big_map address nat) nat) (pair (address %fa2) (address %oracle)) : list operation
+        SWAP;       # pair (pair (big_map address nat) nat) (pair (address %fa2) (address %oracle)) : pair (address %fa2) (address %oracle) : list operation
+        CAR;        # pair (big_map address nat) nat : pair (address %fa2) (address %oracle) : list operation
+        DUP;        # pair (big_map address nat) nat : pair (big_map address nat) nat : pair (address %fa2) (address %oracle) : list operation
+        CAR;        # big_map address nat : pair (big_map address nat) nat : pair (address %fa2) (address %oracle) : list operation
+        SWAP;       # pair (big_map address nat) nat : big_map address nat : pair (address %fa2) (address %oracle) : list operation
+        CDR;        # nat : big_map address nat : pair (address %fa2) (address %oracle) : list operation
+        PUSH nat 1; # nat : nat : big_map address nat : pair (address %fa2) (address %oracle) : list operation
+        ADD;        # nat : big_map address nat : pair (address %fa2) (address %oracle) : list operation
+        SWAP;       # big_map address nat : nat : pair (address %fa2) (address %oracle) : list operation
+        PAIR;       # pair (big_map address nat) nat : pair (address %fa2) (address %oracle) : list operation
+        PAIR;       # pair (pair (big_map address nat) nat) (pair (address %fa2) (address %oracle)) : list operation
+        SWAP;       # list operation : pair (pair (big_map address nat) nat) (pair (address %fa2) (address %oracle))
+      }
+      {
+        IF_LEFT
+          {
+            # == pure_nfts ==
+            # sp.verify(self.data.auth[sp.sender] == params.token_id) # @parameter%pure_nfts : @storage
+            DUP;        # @parameter%pure_nfts : @parameter%pure_nfts : @storage
+            CDDR;       # nat : @parameter%pure_nfts : @storage
+            DIG 2;      # @storage : nat : @parameter%pure_nfts
+            DUP;        # @storage : @storage : nat : @parameter%pure_nfts
+            DUG 3;      # @storage : nat : @parameter%pure_nfts : @storage
+            CAAR;       # big_map address nat : nat : @parameter%pure_nfts : @storage
+            SENDER;     # address : big_map address nat : nat : @parameter%pure_nfts : @storage
+            GET;        # option nat : nat : @parameter%pure_nfts : @storage
+            IF_SOME
+              {
+                # of_some: Get-item:124 # @some : nat : @parameter%pure_nfts : @storage
+              }
+              {
+                PUSH int 124; # int : nat : @parameter%pure_nfts : @storage
+                FAILWITH;   # FAILED
+              }; # @some : nat : @parameter%pure_nfts : @storage
+            COMPARE;    # int : @parameter%pure_nfts : @storage
+            EQ;         # bool : @parameter%pure_nfts : @storage
+            IF
+              {}
+              {
+                PUSH string "WrongCondition: self.data.auth[sp.sender] == params.token_id"; # string : @parameter%pure_nfts : @storage
+                FAILWITH;   # FAILED
+              }; # @parameter%pure_nfts : @storage
+            # sp.transfer(sp.record(address = params.address, amount = params.amount, symbol = 'pure', token_id = params.token_id), sp.tez(0), sp.contract(sp.TRecord(address = sp.TAddress, amount = sp.TNat, symbol = sp.TString, token_id = sp.TNat).layout((("address", "amount"), ("symbol", "token_id"))), self.data.fa2, entry_point='mint').open_some()) # @parameter%pure_nfts : @storage
+            NIL operation; # list operation : @parameter%pure_nfts : @storage
+            DIG 2;      # @storage : list operation : @parameter%pure_nfts
+            DUP;        # @storage : @storage : list operation : @parameter%pure_nfts
+            DUG 3;      # @storage : list operation : @parameter%pure_nfts : @storage
+            CDAR;       # address : list operation : @parameter%pure_nfts : @storage
+            CONTRACT %mint (pair (pair (address %address) (nat %amount)) (pair (string %symbol) (nat %token_id))); # option (contract (pair (pair (address %address) (nat %amount)) (pair (string %symbol) (nat %token_id)))) : list operation : @parameter%pure_nfts : @storage
+            IF_SOME
+              {}
+              {
+                PUSH int 139; # int : list operation : @parameter%pure_nfts : @storage
+                FAILWITH;   # FAILED
+              }; # @some : list operation : @parameter%pure_nfts : @storage
+            PUSH mutez 0; # mutez : @some : list operation : @parameter%pure_nfts : @storage
+            DIG 3;      # @parameter%pure_nfts : mutez : @some : list operation : @storage
+            DUP;        # @parameter%pure_nfts : @parameter%pure_nfts : mutez : @some : list operation : @storage
+            DUG 4;      # @parameter%pure_nfts : mutez : @some : list operation : @parameter%pure_nfts : @storage
+            CDDR;       # nat : mutez : @some : list operation : @parameter%pure_nfts : @storage
+            PUSH string "pure"; # string : nat : mutez : @some : list operation : @parameter%pure_nfts : @storage
+            PAIR %symbol %token_id; # pair (string %symbol) (nat %token_id) : mutez : @some : list operation : @parameter%pure_nfts : @storage
+            DIG 4;      # @parameter%pure_nfts : pair (string %symbol) (nat %token_id) : mutez : @some : list operation : @storage
+            DUP;        # @parameter%pure_nfts : @parameter%pure_nfts : pair (string %symbol) (nat %token_id) : mutez : @some : list operation : @storage
+            CDAR;       # nat : @parameter%pure_nfts : pair (string %symbol) (nat %token_id) : mutez : @some : list operation : @storage
+            SWAP;       # @parameter%pure_nfts : nat : pair (string %symbol) (nat %token_id) : mutez : @some : list operation : @storage
+            CAR;        # address : nat : pair (string %symbol) (nat %token_id) : mutez : @some : list operation : @storage
+            PAIR %address %amount; # pair (address %address) (nat %amount) : pair (string %symbol) (nat %token_id) : mutez : @some : list operation : @storage
+            PAIR;       # pair (pair (address %address) (nat %amount)) (pair (string %symbol) (nat %token_id)) : mutez : @some : list operation : @storage
+            TRANSFER_TOKENS; # operation : list operation : @storage
+            CONS;       # list operation : @storage
+          }
+          {
+            SWAP;       # @storage : @parameter%update_adm
+            # == update_adm ==
+            # sp.verify(sp.sender == self.data.oracle) # @storage : @parameter%update_adm
+            DUP;        # @storage : @storage : @parameter%update_adm
+            DUG 2;      # @storage : @parameter%update_adm : @storage
+            CDDR;       # address : @parameter%update_adm : @storage
+            SENDER;     # address : address : @parameter%update_adm : @storage
+            COMPARE;    # int : @parameter%update_adm : @storage
+            EQ;         # bool : @parameter%update_adm : @storage
+            IF
+              {}
+              {
+                PUSH string "WrongCondition: sp.sender == self.data.oracle"; # string : @parameter%update_adm : @storage
+                FAILWITH;   # FAILED
+              }; # @parameter%update_adm : @storage
+            # sp.transfer(params.address, sp.tez(0), sp.contract(sp.TAddress, self.data.fa2, entry_point='set_administrator').open_some()) # @parameter%update_adm : @storage
+            NIL operation; # list operation : @parameter%update_adm : @storage
+            DIG 2;      # @storage : list operation : @parameter%update_adm
+            DUP;        # @storage : @storage : list operation : @parameter%update_adm
+            DUG 3;      # @storage : list operation : @parameter%update_adm : @storage
+            CDAR;       # address : list operation : @parameter%update_adm : @storage
+            CONTRACT %set_administrator address; # option (contract address) : list operation : @parameter%update_adm : @storage
+            IF_SOME
+              {}
+              {
+                PUSH int 98; # int : list operation : @parameter%update_adm : @storage
+                FAILWITH;   # FAILED
+              }; # @some : list operation : @parameter%update_adm : @storage
+            PUSH mutez 0; # mutez : @some : list operation : @parameter%update_adm : @storage
+            DIG 3;      # @parameter%update_adm : mutez : @some : list operation : @storage
+            TRANSFER_TOKENS; # operation : list operation : @storage
+            CONS;       # list operation : @storage
+          }; # list operation : @storage
+      }; # list operation : pair (pair (big_map address nat) nat) (pair (address %fa2) (address %oracle))
+    PAIR;       # pair (list operation) (pair (pair (big_map address nat) nat) (pair (address %fa2) (address %oracle)))
+  };

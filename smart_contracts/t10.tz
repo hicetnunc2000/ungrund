@@ -1,0 +1,29 @@
+parameter (pair (address %addr) (pair (string %info_hash) (string %magnet)));
+storage   (pair (address %admin) (list %storage (pair (address %addr) (pair (string %info_hash) (string %magnet)))));
+code
+  {
+    DUP;        # pair @parameter @storage : pair @parameter @storage
+    CDR;        # @storage : pair @parameter @storage
+    SWAP;       # pair @parameter @storage : @storage
+    CAR;        # @parameter : @storage
+    # Entry point: insert # @parameter : @storage
+    # self.data.storage.push(params) # @parameter : @storage
+    SWAP;       # @storage : @parameter
+    DUP;        # @storage : @storage : @parameter
+    DUG 2;      # @storage : @parameter : @storage
+    CAR;        # address : @parameter : @storage
+    DIG 2;      # @storage : address : @parameter
+    DUP;        # @storage : @storage : address : @parameter
+    DUG 3;      # @storage : address : @parameter : @storage
+    CDR;        # list (pair (address %addr) (pair (string %info_hash) (string %magnet))) : address : @parameter : @storage
+    DIG 2;      # @parameter : list (pair (address %addr) (pair (string %info_hash) (string %magnet))) : address : @storage
+    DUP;        # @parameter : @parameter : list (pair (address %addr) (pair (string %info_hash) (string %magnet))) : address : @storage
+    DUG 3;      # @parameter : list (pair (address %addr) (pair (string %info_hash) (string %magnet))) : address : @parameter : @storage
+    CONS;       # list (pair (address %addr) (pair (string %info_hash) (string %magnet))) : address : @parameter : @storage
+    SWAP;       # address : list (pair (address %addr) (pair (string %info_hash) (string %magnet))) : @parameter : @storage
+    PAIR;       # pair address (list (pair (address %addr) (pair (string %info_hash) (string %magnet)))) : @parameter : @storage
+    DUG 2;      # @parameter : @storage : pair address (list (pair (address %addr) (pair (string %info_hash) (string %magnet))))
+    DROP 2;     # pair address (list (pair (address %addr) (pair (string %info_hash) (string %magnet))))
+    NIL operation; # list operation : pair address (list (pair (address %addr) (pair (string %info_hash) (string %magnet))))
+    PAIR;       # pair (list operation) (pair address (list (pair (address %addr) (pair (string %info_hash) (string %magnet)))))
+  } # pair (list operation) (pair address (list (pair (address %addr) (pair (string %info_hash) (string %magnet)))));

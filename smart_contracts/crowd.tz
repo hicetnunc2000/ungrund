@@ -1,0 +1,290 @@
+parameter (or (unit %payOff) (or (unit %refund) (unit %sendFund)));
+
+storage (pair (pair (timestamp %maxTime) (mutez %minAmount)) (pair (map %parties address mutez) (mutez %total)));
+
+code
+  {
+    DUP;
+    CDR;
+    SWAP;
+    CAR;
+    IF_LEFT
+      {
+        SOURCE;
+        SENDER;
+        COMPARE;
+        EQ;
+        IF
+          {
+          }
+          {
+            PUSH string "WrongCondition: sp.sender == sp.source";
+            FAILWITH;
+          };
+        SWAP;
+        DUP;
+        DUG 2;
+        CADR;
+        DIG 2;
+        DUP;
+        DUG 3;
+        CDDR;
+        COMPARE;
+        GT;
+        IF
+          {
+          }
+          {
+            PUSH string "WrongCondition: self.data.total > self.data.minAmount";
+            FAILWITH;
+          };
+        SWAP;
+        DUP;
+        DUG 2;
+        CAAR;
+        NOW;
+        COMPARE;
+        GT;
+        IF
+          {
+          }
+          {
+            PUSH string "WrongCondition: sp.now > self.data.maxTime";
+            FAILWITH;
+          };
+        NIL operation;
+        SOURCE;
+        CONTRACT unit;
+        IF_SOME
+          {
+          }
+          {
+            PUSH unit Unit;
+            FAILWITH;
+          };
+        DIG 3;
+        DUP;
+        DUG 4;
+        CDDR;
+        PUSH unit Unit;
+        TRANSFER_TOKENS;
+        CONS;
+        DIG 2;
+        DUP;
+        DUG 3;
+        DUP;
+        CAR;
+        SWAP;
+        CDAR;
+        BALANCE;
+        SWAP;
+        PAIR;
+        SWAP;
+        PAIR;
+        DUG 3;
+        DIG 2;
+        DROP;
+        SWAP;
+        DROP;
+      }
+      {
+        IF_LEFT
+          {
+            SWAP;
+            DUP;
+            DUG 2;
+            CAAR;
+            NOW;
+            COMPARE;
+            GT;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: sp.now > self.data.maxTime";
+                FAILWITH;
+              };
+            BALANCE;
+            DIG 2;
+            DUP;
+            DUG 3;
+            CADR;
+            COMPARE;
+            GT;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: self.data.minAmount > sp.balance";
+                FAILWITH;
+              };
+            NIL address;
+            DIG 2;
+            DUP;
+            DUG 3;
+            CDAR;
+            ITER
+              {
+                CAR;
+                CONS;
+              };
+            NIL address;
+            SWAP;
+            ITER
+              {
+                CONS;
+              };
+            DUP;
+            NIL operation;
+            SWAP;
+            ITER
+              {
+                SWAP;
+                DUP;
+                DUG 2;
+                SWAP;
+                DUP;
+                DUG 2;
+                CONTRACT unit;
+                IF_SOME
+                  {
+                  }
+                  {
+                    PUSH unit Unit;
+                    FAILWITH;
+                  };
+                DIG 6;
+                DUP;
+                DUG 7;
+                CDAR;
+                DIG 3;
+                DUP;
+                DUG 4;
+                GET;
+                IF_SOME
+                  {
+                  }
+                  {
+                    PUSH string "Get-item:35";
+                    FAILWITH;
+                  };
+                PUSH unit Unit;
+                TRANSFER_TOKENS;
+                CONS;
+                DUG 2;
+                SWAP;
+                DROP;
+                DIG 4;
+                DUP;
+                DUG 5;
+                DUP;
+                CAR;
+                SWAP;
+                CDAR;
+                BALANCE;
+                SWAP;
+                PAIR;
+                SWAP;
+                PAIR;
+                DUG 5;
+                DROP;
+                DIG 3;
+                DROP;
+              };
+            SWAP;
+            DROP;
+            SWAP;
+            DROP;
+          }
+          {
+            NOW;
+            DIG 2;
+            DUP;
+            DUG 3;
+            CAAR;
+            COMPARE;
+            GT;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: self.data.maxTime > sp.now";
+                FAILWITH;
+              };
+            PUSH bool True;
+            DIG 2;
+            DUP;
+            DUG 3;
+            CDAR;
+            SENDER;
+            MEM;
+            COMPARE;
+            NEQ;
+            IF
+              {
+              }
+              {
+                PUSH string "WrongCondition: ( self.data.parties.contains ( sp.sender ) ) != True";
+                FAILWITH;
+              };
+            NIL operation;
+            SENDER;
+            CONTRACT unit;
+            IF_SOME
+              {
+              }
+              {
+                PUSH unit Unit;
+                FAILWITH;
+              };
+            AMOUNT;
+            PUSH unit Unit;
+            TRANSFER_TOKENS;
+            CONS;
+            DIG 2;
+            DUP;
+            DUG 3;
+            DUP;
+            CAR;
+            SWAP;
+            CDR;
+            DUP;
+            CDR;
+            SWAP;
+            CAR;
+            AMOUNT;
+            SOME;
+            SENDER;
+            UPDATE;
+            PAIR;
+            SWAP;
+            PAIR;
+            DUG 3;
+            DIG 2;
+            DROP;
+            DIG 2;
+            DUP;
+            DUG 3;
+            DUP;
+            CAR;
+            SWAP;
+            CDAR;
+            AMOUNT;
+            DIG 5;
+            DUP;
+            DUG 6;
+            CDDR;
+            ADD;
+            SWAP;
+            PAIR;
+            SWAP;
+            PAIR;
+            DUG 3;
+            DIG 2;
+            DROP;
+            SWAP;
+            DROP;
+          };
+      };
+    PAIR;
+  }
