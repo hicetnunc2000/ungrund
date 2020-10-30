@@ -63,7 +63,8 @@ class forge_origination(Resource):
 @api.doc(params={
     'op': 'op to be signed',
     'sig': 'edsig...',
-    'tz': 'tz1 address origin'
+    'tz': 'tz1 address origin',
+    'network' : 'network'
     # other possible parameters depending on the entrypoint
 })
 
@@ -71,19 +72,21 @@ class sign_operation(Resource):
     def post(self):
         payload = v.read_requests(request)
         print(payload)
-        payload['op']['signature'] = payload['sig']
+        signature = payload['sig']
+        print(signature)
+        payload['op']['signature'] = signature
 
-        pytz = pytezos.using(key=payload['tz'])
+        pytz = pytezos.using(key=payload['tz'], shell=payload['network'])
         op = pytz.operation_group(
             protocol=payload['op']['protocol'],
             branch=payload['op']['branch'],
             contents=payload['op']['contents'],
             #signature="edsig{}".format(payload['sig'])
-            signature=payload['sig']
+            signature=signature
             )
-
-        res = op.fill().inject(_async=False, num_blocks_wait=2)
-
+        print(op.json_payload())
+        res = op.fill().inject()
+        print(res)
         return v.filter_response(res)
 
 @api.route('/verify')
@@ -97,6 +100,7 @@ class verify_message(Resource):
         
         payload = v.read_requests(request)
         v = Key.verify(payload['pk'], payload['msg'])
+        pass
 
 
 @api.route('/auth')

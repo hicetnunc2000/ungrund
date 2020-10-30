@@ -19,7 +19,7 @@ from routes.fa12_route import api as fa12_api
 from routes.fa2_route import api as fa2_api
 from routes.keys_route import api as keys_api
 from routes.storage import api as storage_api
-from routes.test import api as auth_api
+from routes.auth import api as auth_api
 from routes.source_route import api as protocol_api
 
 app = Flask(__name__)

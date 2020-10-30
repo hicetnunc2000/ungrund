@@ -5,11 +5,11 @@ import datetime
 import requests
 import json
 
-
 class Protocol:
     def __init__(self):
         self.contract = Contract.from_file('./smart_contracts/protocol.tz')
-        self.protocol = 'KT1AJfwziXDgJcAmT5t2iRb422NmjYn1FCa3'
+        self.protocol = 'KT1BESj6UfiHbHGQo2aWzktRjxguBd1mrbYG'  
+        #self.protocol = 'KT1NKPzq6Rz1Kv5L4MbXdh5hE7rmV2NGbYkH' #cartha
         self.oracle = ''
         self.network = 'mainnet'
 
@@ -19,28 +19,34 @@ class Protocol:
         return protocol
 
     def origination(self, tz, network, fa2, oracle):
+        
         p = pytezos.using(key=tz, shell=network)
-        ret = p.origination(script=self.contract.script(storage={ "auth" : {}, "fa2" : fa2, "oracle" : oracle, "counter": 0})).autofill().forge()
-        return ret
+        op = p.origination(script=self.contract.script(storage={"fa2" : fa2, "opensources" : {}, "oracle" : oracle, "paused" : False, "tk_counter" : 1})).autofill()
+        forge = op.forge()
+        print([op, forge])
+        return [op, forge]
     
     def opensource_origin(self, tz, meta, goal):
 
         protocol = self.initialize_contract_instance(self.protocol, tz)
         print(tz)
         print([meta, goal])
-        ret = protocol.opensource_origin({'meta' : meta, "goal" : goal}).operation_group.forge()
-        return ret
+        
+        op = protocol.originate_opensource({"goal" : goal, 'meta' : meta}).operation_group
+        forge = op.forge()
+        payload = op.json_payload()
+        print ([forge, payload])
+        return [forge, payload]
 
     def contribute(self, kt, tz, amount):
         protocol = self.initialize_contract_instance(kt, tz)
         ret = protocol.contribute(None).with_amount(Decimal(amount)).operation_group.forge()
         return ret
 
-    def withdraw(self, kt, tz, amount):
-
+    def withdraw(self, kt, tz, address, amount):
         protocol = self.initialize_contract_instance(kt, tz)
-        #ret = protocol.withdraw
-        pass
+        ret = protocol.withdraw([{"address" : address, "amount" : amount}]).operation_group.forge()
+        return ret
 
     def get_opensources(self, contract_i):
 

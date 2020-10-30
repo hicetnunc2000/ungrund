@@ -31,3 +31,16 @@ class publish_fa2(Resource):
             return v.filter_response(op)
         except:
             return 500
+
+@api.route('/ledger')
+@api.doc(params={
+    'tz' : 'tz address',
+    'network' : 'network'
+})
+class ledger(Resource):
+    def post(self):
+        """ try:
+            
+        except:
+            return 500 """
+        pass
