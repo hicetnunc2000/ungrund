@@ -4,7 +4,7 @@ import json
 
 class FA2:
     def __init__(self):
-        self.contract = Contract.from_file('../smart_contracts/fa2.tz')
+        #self.contract = Contract.from_file('../smart_contracts/fa2.tz')
         self.symbol = lambda e: e[3]['value']
 
     # some of the parameters are left blank, but they can be edited or accessed by other methods
@@ -59,7 +59,7 @@ class FA2:
         return [
             {
                 'id': int(e['key']['value']),
-                'total_suply': int(e['value']['children'][1]['value']),
+                'total_supply': int(e['value']['children'][1]['value']),
                 'metadata': self.symbol(e['value']['children'][0]['children'])
             } for e in tokens
         ]

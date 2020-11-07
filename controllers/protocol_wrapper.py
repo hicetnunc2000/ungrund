@@ -8,7 +8,7 @@ import json
 class Protocol:
     def __init__(self):
         self.contract = Contract.from_file('./smart_contracts/protocol.tz')
-        self.protocol = 'KT1BESj6UfiHbHGQo2aWzktRjxguBd1mrbYG'  
+        self.protocol = 'KT1LMhkcSWmnYJZHzRmDg9NRaUwiio2nvazq'  
         #self.protocol = 'KT1NKPzq6Rz1Kv5L4MbXdh5hE7rmV2NGbYkH' #cartha
         self.oracle = ''
         self.network = 'mainnet'
@@ -32,11 +32,11 @@ class Protocol:
         print(tz)
         print([meta, goal])
         
-        op = protocol.originate_opensource({"goal" : goal, 'meta' : meta}).operation_group
+        op = protocol.originate_hicetnuncDAO({"address" : tz, "goal" : goal, 'meta' : meta}).operation_group
         forge = op.forge()
         payload = op.json_payload()
         print ([forge, payload])
-        return [forge, payload]
+        return [forge, payload, self.protocol]
 
     def contribute(self, kt, tz, amount):
         protocol = self.initialize_contract_instance(kt, tz)

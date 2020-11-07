@@ -6,6 +6,7 @@ from flask_restx import fields, Resource, Api, Namespace
 
 from controllers.validate import Validate
 from controllers.protocol_wrapper import Protocol
+from controllers.fa2_wrapper import FA2
 
 import ipfshttpclient
 import distutils.util
@@ -14,6 +15,7 @@ import urllib
 import json
 #import redis
 
+fa2 = FA2()
 client = ipfshttpclient.connect('/dns4/ipfs.infura.io/tcp/5001/https')
 pytezos = pytezos
 OperationResult = OperationResult
@@ -59,8 +61,10 @@ class contribute(Resource):
         try:
             protocol = Protocol()
             payload = v.read_requests(request)
+            print(payload)
             op = protocol.contribute(
                 payload['kt'], payload['tz'], payload['amount'])
+            print(op)
             return op
         except:
             return 500
@@ -71,7 +75,7 @@ class search_sources(Resource):
     def get(self):
 
         # get opensources from bigmap
-        opensource_sample = "KT1EoHeabYUzHnkdQDdebrVFEVomEX1AWQi3"
+        opensource_sample = "KT1HYsh4BFcKzdm212zVjNrmQN4MfcHGNBqE"
         network = "mainnet"
 
         arr = []
@@ -91,14 +95,14 @@ class search_sources(Resource):
         for e in arr:
             print([e['address'], e['balance'], e['network']])
             print(e['manager'])
-            if e['network'] == 'mainnet' and e['manager'] == 'KT1BESj6UfiHbHGQo2aWzktRjxguBd1mrbYG':
+            if e['network'] == 'mainnet' and e['manager'] == 'KT1LMhkcSWmnYJZHzRmDg9NRaUwiio2nvazq':
                 contract = p.contract(e['address'])
                 print(contract.storage())
                 aux_arr.append({
                     'address': e['address'],
                     'storage': contract.storage(),
                     'balance': int(e['balance']),
-                    'percentage': ((int(e['balance']) / 1000000)*100 / int(contract.storage()['goal']))
+                    'percentage': round(((int(e['balance']) / 1000000)*100 / int(contract.storage()['goal'])), 2)
                 })
 
         for e in aux_arr:
@@ -148,9 +152,8 @@ class search_kt(Resource):
                 'storage': storage,
                 'title': meta['title'],
                 'description': meta['description'],
-                'url' : meta['url'],
-                'placeholder' : meta['placeholder'],
-                'percentage': ((int(e['balance']) / 1000000)*100 / storage['goal'])
+                'links' : meta['links'],
+                'percentage': round(((int(e['balance']) / 1000000)*100 / storage['goal']), 2)
             }
 
         except:
@@ -170,7 +173,7 @@ class search_kt(Resource):
 class search_tz(Resource):
     def post(self):
 
-        opensource_sample = "KT1EoHeabYUzHnkdQDdebrVFEVomEX1AWQi3"
+        opensource_sample = "KT1HYsh4BFcKzdm212zVjNrmQN4MfcHGNBqE"
         network = "mainnet"
 
         payload = v.read_requests(request)
@@ -197,7 +200,7 @@ class search_tz(Resource):
 
             print([e['address'], e['balance'], e['network'], e['manager']])
 
-            if e['network'] == 'mainnet' and e['manager'] == 'KT1BESj6UfiHbHGQo2aWzktRjxguBd1mrbYG':
+            if e['network'] == 'mainnet' and e['manager'] == 'KT1LMhkcSWmnYJZHzRmDg9NRaUwiio2nvazq':
                 contract = p.contract(e['address'])
                 print(contract.storage())
                 if contract.storage()['admin'] == payload['tz']:
@@ -212,8 +215,13 @@ class search_tz(Resource):
                     })
 
             print(aux_arr)
+            tokens_meta = fa2.get_ledger('KT1FieN42mewbbLc5H6ZyCpbhupBNYtcxwDL', payload['tz'], 'mainnet')
+            print(tokens_meta)
+
         return {
-            "results": aux_arr
+            "results": aux_arr,
+            "token_meta" : [e if e['address'] == payload['tz'] else None for e in tokens_meta],
+            "balance" : int(p.balance())
         }
 
 
@@ -226,7 +234,10 @@ class search_tz(Resource):
 })
 class withdraw(Resource):
     def post(self):
-        pass
+        payload = v.read_requests(request)
+        print(payload)
+        op = Protocol.withdraw(payload['kt'], payload['tz'], payload['tz'], payload['amount'])
+        return op
 
 
 @api.route('/resources')
