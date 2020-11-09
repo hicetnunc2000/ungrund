@@ -14,7 +14,7 @@ class Validate():
         pass
         
     # if session is not set check redis session
-    # redis impementation v1.1
+    # redis impementation deprecated
 
     def read_session(self, sess):
 

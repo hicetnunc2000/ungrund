@@ -15,6 +15,7 @@ import urllib
 import json
 #import redis
 
+protocol = Protocol()
 fa2 = FA2()
 client = ipfshttpclient.connect('/dns4/ipfs.infura.io/tcp/5001/https')
 pytezos = pytezos
@@ -34,19 +35,9 @@ api = Namespace('source', description='publish and other entrypoints')
 class publish_source(Resource):
     def post(self):
 
-        protocol = Protocol()
-
         payload = v.read_requests(request)
-        #pytz = v.read_session(session)
-        #res = r.get(payload['auth'])
-        print(payload)
-        ret = protocol.opensource_origin(
+        return protocol.opensource_origin(
             payload['tz'], payload['meta']['hash'], int(payload['goal']))
-        print(ret)
-        return {
-            "data": ret[0],
-            "op": ret[1]
-        }
 
 
 @api.route('/contribute')
@@ -59,13 +50,9 @@ class publish_source(Resource):
 class contribute(Resource):
     def post(self):
         try:
-            protocol = Protocol()
             payload = v.read_requests(request)
-            print(payload)
-            op = protocol.contribute(
+            return protocol.contribute(
                 payload['kt'], payload['tz'], payload['amount'])
-            print(op)
-            return op
         except:
             return 500
 
@@ -98,11 +85,16 @@ class search_sources(Resource):
             if e['network'] == 'mainnet' and e['manager'] == 'KT1LMhkcSWmnYJZHzRmDg9NRaUwiio2nvazq':
                 contract = p.contract(e['address'])
                 print(contract.storage())
+                storage = contract.storage()
+                r = requests.post(
+                'https://37kpt5uorg.execute-api.us-east-1.amazonaws.com/dev/get_ipfs', {"hash": storage['meta']})
+                meta = json.loads(r.json())
                 aux_arr.append({
                     'address': e['address'],
                     'storage': contract.storage(),
                     'balance': int(e['balance']),
-                    'percentage': round(((int(e['balance']) / 1000000)*100 / int(contract.storage()['goal'])), 2)
+                    'percentage': round(((int(e['balance']) / 1000000)*100 / int(contract.storage()['goal'])), 2),
+                    'meta' : meta
                 })
 
         for e in aux_arr:
@@ -236,7 +228,7 @@ class withdraw(Resource):
     def post(self):
         payload = v.read_requests(request)
         print(payload)
-        op = Protocol.withdraw(payload['kt'], payload['tz'], payload['tz'], payload['amount'])
+        op = protocol.withdraw_funds(payload)
         return op
 
 

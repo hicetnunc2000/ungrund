@@ -14,7 +14,7 @@ class Protocol:
         self.network = 'mainnet'
 
     def initialize_contract_instance(self, kt, tz):
-        p = pytezos.using(key=tz, shell=self.network)
+        p = pytezos.using(key=tz, shell='https://api.tez.ie/rpc/mainnet/')
         protocol = p.contract(kt)
         return protocol
 
@@ -29,27 +29,19 @@ class Protocol:
     def opensource_origin(self, tz, meta, goal):
 
         protocol = self.initialize_contract_instance(self.protocol, tz)
-        print(tz)
-        print([meta, goal])
-        
-        op = protocol.originate_hicetnuncDAO({"address" : tz, "goal" : goal, 'meta' : meta}).operation_group
-        forge = op.forge()
-        payload = op.json_payload()
-        print ([forge, payload])
-        return [forge, payload, self.protocol]
+        return protocol.originate_hicetnuncDAO({"address" : tz, "goal" : goal, 'meta' : meta}).operation_group.json_payload()
 
     def contribute(self, kt, tz, amount):
         protocol = self.initialize_contract_instance(kt, tz)
-        ret = protocol.contribute(None).with_amount(Decimal(amount)).operation_group.forge()
-        return ret
+        return protocol.contribute(None).with_amount(Decimal(amount)).operation_group.json_payload()
 
-    def withdraw(self, kt, tz, address, amount):
-        protocol = self.initialize_contract_instance(kt, tz)
-        ret = protocol.withdraw([{"address" : address, "amount" : amount}]).operation_group.forge()
-        return ret
+    def withdraw_funds(self, payload):
+        protocol = self.initialize_contract_instance(payload['kt'], payload['tz'])
+        print(payload)
+         
+        return protocol.withdraw({"address" : payload['tz'], "amount" : Decimal(payload['amount'])}).operation_group.json_payload()
 
     def get_opensources(self, contract_i):
-
         r = requests.get('https://api.better-call.dev/v1/bigmap/{}/{}/keys'.format(self.network, contract_i.storage()['auth']))
         return [ {
             "key" : e['data']['key']['value'],
@@ -59,5 +51,7 @@ class Protocol:
     # administrator
     def update_adm(self, kt, tz, adm):
         protocol = self.initialize_contract_instance(kt, tz)
-        ret = protocol.update_adm(adm).operation_group.forge()
-        return ret
+        return protocol.update_adm(adm).operation_group
+
+    def update_linktree(self, kt, tz, links):
+        pass

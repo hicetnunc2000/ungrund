@@ -7,8 +7,7 @@ from flask import Flask
 from flask_restx import fields, Resource, Api, Namespace
 
 from controllers.validate import Validate
-
-import redis
+import base58
 import distutils.util
 import requests
 import urllib
@@ -18,9 +17,8 @@ import uuid
 pytezos = pytezos
 OperationResult = OperationResult
 v = Validate()
-r = redis.Redis(host='localhost', port=6379, db=0)
-api = Namespace('auth', description='forge operatioins to be signed')
 
+api = Namespace('auth', description='forge operatioins to be signed')
 
 @api.route('/origination')
 @api.doc(params={
@@ -40,9 +38,6 @@ class forge_origination(Resource):
             shell="mainnet"
             )
 
-
-        #contract = Contract.from_file('./smart_contracts/fa12.tz')
-        #op = pytz.origination(script=contract.script(storage={'ledger': {}, 'admin': pytz.key.public_key_hash(), 'paused': False, 'totalSupply': 1000000})).fill()
         contract = Contract.from_file('./smart_contracts/transaction2.tz')
         op = pytz.origination(script=contract.script(storage=2)).fill()
         print(op.json_payload())
@@ -59,7 +54,7 @@ class forge_origination(Resource):
         return res
 
 
-@api.route('/sign')
+@api.route('/inject')
 @api.doc(params={
     'op': 'op to be signed',
     'sig': 'edsig...',
@@ -68,25 +63,23 @@ class forge_origination(Resource):
     # other possible parameters depending on the entrypoint
 })
 
-class sign_operation(Resource):
+class signed_operation(Resource):
     def post(self):
         payload = v.read_requests(request)
-        print(payload)
+
         signature = payload['sig']
-        print(signature)
         payload['op']['signature'] = signature
 
         pytz = pytezos.using(key=payload['tz'], shell=payload['network'])
+
         op = pytz.operation_group(
             protocol=payload['op']['protocol'],
             branch=payload['op']['branch'],
             contents=payload['op']['contents'],
-            #signature="edsig{}".format(payload['sig'])
             signature=signature
             )
-        print(op.json_payload())
+
         res = op.fill().inject()
-        print(res)
         return v.filter_response(res)
 
 @api.route('/verify')
@@ -97,10 +90,8 @@ class sign_operation(Resource):
 })
 class verify_message(Resource):
     def post(self):
-        
-        payload = v.read_requests(request)
-        v = Key.verify(payload['pk'], payload['msg'])
         pass
+
 
 
 @api.route('/auth')
