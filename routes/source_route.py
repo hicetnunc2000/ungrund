@@ -62,7 +62,7 @@ class search_sources(Resource):
     def get(self):
 
         # get opensources from bigmap
-        opensource_sample = "KT1VjEfVuwA4A1cuHvugTwrtZSvhPv9JwwbR"
+        opensource_sample = "KT1UcPh3S1K1GAFqUt212H9qjFVdxEnca1qk"
         network = "mainnet"
 
         arr = []
@@ -82,7 +82,7 @@ class search_sources(Resource):
         for e in arr:
             print([e['address'], e['balance'], e['network']])
             print(e['manager'])
-            if e['network'] == 'mainnet' and e['manager'] == 'KT1LCDCSGBHdKcxp7ZsRKNqmdgYourimhCmG':
+            if e['network'] == 'mainnet' and e['manager'] == 'KT1Q72pNNiCnBamwttWvXGE9N2yuz6c7guSD':
                 contract = p.contract(e['address'])
                 print(contract.storage())
                 storage = contract.storage()
@@ -165,7 +165,7 @@ class search_kt(Resource):
 class search_tz(Resource):
     def post(self):
 
-        opensource_sample = "KT1VjEfVuwA4A1cuHvugTwrtZSvhPv9JwwbR"
+        opensource_sample = "KT1UcPh3S1K1GAFqUt212H9qjFVdxEnca1qk"
         network = "mainnet"
 
         payload = v.read_requests(request)
@@ -192,7 +192,7 @@ class search_tz(Resource):
 
             print([e['address'], e['balance'], e['network'], e['manager']])
 
-            if e['network'] == 'mainnet' and e['manager'] == 'KT1LCDCSGBHdKcxp7ZsRKNqmdgYourimhCmG':
+            if e['network'] == 'mainnet' and e['manager'] == 'KT1Q72pNNiCnBamwttWvXGE9N2yuz6c7guSD':
                 contract = p.contract(e['address'])
                 print(contract.storage())
                 if contract.storage()['admin'] == payload['tz']:
@@ -207,7 +207,7 @@ class search_tz(Resource):
                     })
 
             print(aux_arr)
-            tokens_meta = fa2.get_ledger('KT1FaKvzjgVGZtiA7yyx97txY8J5cE5qpjQ1', payload['tz'], 'mainnet')
+            tokens_meta = fa2.get_ledger('KT1Ex8LrDbCrZuTgmWin8eEo7HFw74jAqTvz', payload['tz'], 'mainnet')
             print(tokens_meta)
 
         return {

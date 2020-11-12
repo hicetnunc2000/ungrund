@@ -8,7 +8,7 @@ import json
 class Protocol:
     def __init__(self):
         self.contract = Contract.from_file('./smart_contracts/protocol.tz')
-        self.protocol = 'KT1LCDCSGBHdKcxp7ZsRKNqmdgYourimhCmG'  
+        self.protocol = 'KT1Q72pNNiCnBamwttWvXGE9N2yuz6c7guSD'  
         #self.protocol = 'KT1NKPzq6Rz1Kv5L4MbXdh5hE7rmV2NGbYkH' #cartha
         self.oracle = ''
         self.network = 'mainnet'
