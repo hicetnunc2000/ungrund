@@ -48,7 +48,7 @@ class FA2:
         return [{
             'address': e['data']['key']['children'][0]['value'],
             'id': int(e['data']['key']['children'][1]['value']),
-            'balance': int(e['data']['value']['children'][0]['value'])
+            'balance': int(e['data']['value']['value'])
         } for e in r_cartha]
 
 
