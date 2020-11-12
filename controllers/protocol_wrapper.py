@@ -8,7 +8,7 @@ import json
 class Protocol:
     def __init__(self):
         self.contract = Contract.from_file('./smart_contracts/protocol.tz')
-        self.protocol = 'KT1LMhkcSWmnYJZHzRmDg9NRaUwiio2nvazq'  
+        self.protocol = 'KT1LCDCSGBHdKcxp7ZsRKNqmdgYourimhCmG'  
         #self.protocol = 'KT1NKPzq6Rz1Kv5L4MbXdh5hE7rmV2NGbYkH' #cartha
         self.oracle = ''
         self.network = 'mainnet'
@@ -38,7 +38,6 @@ class Protocol:
     def withdraw_funds(self, payload):
         protocol = self.initialize_contract_instance(payload['kt'], payload['tz'])
         print(payload)
-         
         return protocol.withdraw({"address" : payload['tz'], "amount" : Decimal(payload['amount'])}).operation_group.json_payload()
 
     def get_opensources(self, contract_i):
