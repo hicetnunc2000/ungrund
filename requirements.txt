@@ -9,3 +9,4 @@ flask-cors
 uuid
 redis
 ipfshttpclient==0.7.0a1
+python-dotenv

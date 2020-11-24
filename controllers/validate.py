@@ -24,6 +24,8 @@ class Validate():
             return self.read_mnemonic(sess)
         if (sess['auth'] == 'secret'):
             return self.read_secret(sess)
+        
+        return False
     
     def read_faucet(self, sess):
 
@@ -36,9 +38,6 @@ class Validate():
             
         k = Key.from_faucet(path)
         p = pytezos.using(key = k, shell = sess['network'])
-        #os.remove(path)     
-
-        #print(k.public_key_hash())
 
         return p
   
@@ -47,20 +46,16 @@ class Validate():
         k = Key.from_encoded_key(sess['secret'], passphrase = sess['password'])
         p = pytezos.using(key = k, shell = sess['network'])
 
-        print(k.public_key_hash())
-
         return p
     
     def read_mnemonic(self, sess):
         k = Key.from_mnemonic(sess['mnemonic'], passphrase = sess['password'], email = sess['email'])
         p = pytezos.using(key = k, shell = sess['network'])
             
-        print(k.public_key_hash())
-
         return p
 
     # interpret requests by it's possible formats
-    # returns a json with request data
+    # returns a json with requested data
 
     def read_requests(self, request):
         if (request.data.__len__() == 0):
@@ -69,6 +64,7 @@ class Validate():
             return json.loads(request.data)
 
     # if operation is completed, returns response object with the following properties
+    # deprecated uses OperationResult for contracts origination or in case of simpler transactions returns the full operation result
 
     def filter_response(self, response):
         
@@ -89,3 +85,7 @@ class Validate():
         ret['gas_limit'] = response['contents'][0]['gas_limit']
 
         return ret
+
+    def load_keystore(self):
+        k = Key.from_encoded_key(os.getenv('TZ_SK_DEPLHI'),passphrase=os.getenv('TZ_PASS_DELPHI'))
+        return pytezos.using(key=k,shell=os.getenv('TZ_NETWORK'))

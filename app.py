@@ -21,6 +21,7 @@ from routes.keys_route import api as keys_api
 from routes.storage import api as storage_api
 from routes.auth import api as auth_api
 from routes.source_route import api as protocol_api
+from routes.ungrund import api as objk_api
 
 app = Flask(__name__)
 app.secret_key = 'session_key'
@@ -41,6 +42,7 @@ api.add_namespace(fa12_api)
 api.add_namespace(keys_api)
 api.add_namespace(auth_api)
 api.add_namespace(protocol_api)
+api.add_namespace(objk_api)
 
 api.init_app(app)
 
