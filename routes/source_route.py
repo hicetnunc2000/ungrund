@@ -79,10 +79,14 @@ class search_sources(Resource):
         aux_arr = []
         p = pytezos.using(shell=network)
         arr.extend(res.json()['contracts'])
+        print(arr)
         for e in arr:
-            print([e['address'], e['balance'], e['network']])
-            print(e['manager'])
+
             if e['network'] == 'mainnet' and e['manager'] == 'KT1Q72pNNiCnBamwttWvXGE9N2yuz6c7guSD':
+
+                balance = requests.get('https://api.better-call.dev/v1/account/{}/{}'.format(network, e['address']))
+                balance = balance.json()['balance']
+                print(e['address'])
                 contract = p.contract(e['address'])
                 print(contract.storage())
                 storage = contract.storage()
@@ -92,8 +96,8 @@ class search_sources(Resource):
                 aux_arr.append({
                     'address': e['address'],
                     'storage': contract.storage(),
-                    'balance': int(e['balance']),
-                    'percentage': round(((int(e['balance']) / 1000000)*100 / int(contract.storage()['goal'])), 2),
+                    'balance': int(balance),
+                    'percentage': round(((int(balance) / 1000000)*100 / int(contract.storage()['goal'])), 2),
                     'meta' : meta
                 })
 
@@ -137,15 +141,19 @@ class search_kt(Resource):
             storage['goal'] = int(storage['goal'])
             storage['achieved'] = int(storage['achieved'])
             print(meta['title'])
+            
+            balance = requests.get('https://api.better-call.dev/v1/account/{}/{}'.format('mainnet', e['address']))
+            balance = balance.json()['balance']
+
             return {
                 'address': payload['kt'],
                 'timestamp': e['timestamp'],
-                'balance': int(e['balance']),
+                'balance': int(balance),
                 'storage': storage,
                 'title': meta['title'],
                 'description': meta['description'],
                 'links' : meta['links'],
-                'percentage': round(((int(e['balance']) / 1000000)*100 / storage['goal']), 2)
+                'percentage': round(((int(balance) / 1000000)*100 / storage['goal']), 2)
             }
 
         except:
@@ -189,10 +197,11 @@ class search_tz(Resource):
 
         arr.extend(res.json()['contracts'])
         for e in arr:
-
-            print([e['address'], e['balance'], e['network'], e['manager']])
+            print(e['address'])
 
             if e['network'] == 'mainnet' and e['manager'] == 'KT1Q72pNNiCnBamwttWvXGE9N2yuz6c7guSD':
+                balance = requests.get('https://api.better-call.dev/v1/account/{}/{}'.format(network, e['address']))
+                balance = balance.json()['balance']
                 contract = p.contract(e['address'])
                 print(contract.storage())
                 if contract.storage()['admin'] == payload['tz']:
@@ -202,8 +211,8 @@ class search_tz(Resource):
                     aux_arr.append({
                         'address': e['address'],
                         'storage': s,
-                        'balance': int(e['balance']),
-                        'percentage': ((int(e['balance']) / 1000000)*100 / int(contract.storage()['goal']))
+                        'balance': int(balance),
+                        'percentage': ((int(balance) / 1000000)*100 / int(contract.storage()['goal']))
                     })
 
             print(aux_arr)
