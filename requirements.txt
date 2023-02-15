@@ -3,7 +3,7 @@ flask_restx
 feedparser
 conseil
 pytezos==2.5.11
-werkzeug==0.16.1
+werkzeug==2.2.3
 pyopenssl
 flask-cors
 uuid
